@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QtGlobal>
 
-const string RPI_LOGFILE_PATHPREFIX = "/home/rasllo/logs";
+const QString RPI_LOGFILE_PATHPREFIX = "/home/rasllo/logs/";
 
 void RemoveOldLogs(int NumberOfStoredLog)
 {

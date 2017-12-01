@@ -4,12 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network uitools serialport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
 TARGET = Rasllo
 TEMPLATE = app
+
+CONFIG += c++11 static # console
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -25,10 +27,46 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        rasllo.cpp
+        rasllo.cpp \
+    argumentparser.cpp \
+    beepsound.cpp \
+    errors.cpp \
+    gpioclass.cpp \
+    keyboardhandler.cpp \
+    layout.cpp \
+    modalwindow.cpp \
+    queueactions.cpp \
+    queueitem.cpp \
+    rfid_rc522.cpp \
+    serialcardread.cpp \
+    serialporthandler.cpp
 
 HEADERS += \
-        rasllo.h
+    argumentparser.h \
+    beepsound.h \
+    erritem.h \
+    errors.h \
+    gpioclass.h \
+    keyboardhandler.h \
+    layout.h \
+    modalwindow.h \
+    queueactions.h \
+    queueitem.h \
+    queueitemenum.h \
+    rasllo.h \
+    rfid_rc522.h \
+    serialcardread.h \
+    serialporthandler.h
 
 FORMS += \
-        rasllo.ui
+    rasllo.ui
+
+SUBDIRS += \
+    Rasllo.pro
+
+DISTFILES +=
+
+RESOURCES += \
+    resources/resources.qrc
+
+#DEFINES += ForRaspberryPi

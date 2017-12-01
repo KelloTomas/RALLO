@@ -1,2 +1,7 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/">
+        <file>help.txt</file>
+        <file>InitLayout.ui</file>
+        <file>logo.png</file>
+    </qresource>
+</RCC>

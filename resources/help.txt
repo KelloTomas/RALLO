@@ -13,5 +13,3 @@ spustenie:
 -l : number of stored log files (one file == one day) [default 10]
 
 Tomas Kello
-Anete s. r o.
-Brno

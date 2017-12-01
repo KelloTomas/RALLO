@@ -1,7 +1,7 @@
 #ifndef KEYBOARDHANDLER_H
 #define KEYBOARDHANDLER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <iostream>
 
 class KeyboardHandler: public QObject

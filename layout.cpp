@@ -82,7 +82,7 @@ void Layout::SetTextsOnLayout(QString message)
     EditQObjectAtribute("TimeLast", "text", QDateTime::currentDateTime().toString("hh:mm:ss"));
     if (QDateTime::currentDateTime() < QDateTime::fromString("2019", "yyyy"))
         EditQObjectAtribute("autor", "text", " ");
-    EditQObjectAtribute("logo", "pixmap", ":/anete.png");
+    EditQObjectAtribute("logo", "pixmap", ":/logo.png");
 }
 
 void Layout::SetTimersForTime()

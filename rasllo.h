@@ -1,22 +1,51 @@
-#ifndef RASLLO_H
-#define RASLLO_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <QTime>
+#include <QtWidgets>
+#include <QtNetwork>
+#include <stdlib.h>
+#include <QUiLoader>
+#include <QDebug>
+#include <QLabel>
+#include <QFile>
+#include <QBuffer>
+#include <typeinfo>
+#include <QMutex>
 
-namespace Ui {
-class Rasllo;
-}
+#include "layout.h"
 
-class Rasllo : public QMainWindow
+
+
+class Rasllo : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Rasllo(QWidget *parent = 0);
+    Rasllo(bool isEmulator, QWidget *parent = 0);
     ~Rasllo();
+    Layout *layout;
+    void Init(KeyboardHandler *keyboardCardRead, uint ListenPort, QString progVer);
+
+    vector<QTcpSocket*> clientConnection;
+private slots:
+    void Start();
+    void sessionOpened();
+    void readFromServer();
+    void newConnectionHandler();
+    void clientDisconected();
 
 private:
-    Ui::Rasllo *ui;
+    QString inputData;
+    bool SendResponse(QString message);
+    QTcpServer *tcpServer;
+    quint16 listenPort;
+    QMutex mutex;
+    QNetworkSession *networkSession;
+    QString ServerWasDisconnected = "Server bol odpojený";
+    QString WaitingForServerToConnect = "Čakám na pripojenie servera";
+    QString UnableToStartServer = "Nepodarilo sa spustiť server: ";
+    void closeAllConnections();
 };
 
 #endif // RASLLO_H

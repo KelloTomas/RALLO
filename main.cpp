@@ -8,7 +8,7 @@
 void RemoveOldLogs(int NumberOfStoredLog)
 {
     QDir myDir(QDir::currentPath());
-    myDir.setNameFilters(QStringList()<<"QTTcpServer-*");
+    myDir.setNameFilters(QStringList()<<"Rasllo-*");
     QStringList filesList = myDir.entryList();
     for (int i = 0; i < filesList.size()-NumberOfStoredLog; ++i) {
         qDebug() << "removing old LogFile: " << filesList[i];
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     bool isEmulator = false;
     if(!ArgumentParser::Parse(argc, argv, &portNumber, &displayID, &isEmulator, &logs, Layout::XMLVer() + " - " + programVersion))
         return 0;
-    outputFileName= "QTTcpServer-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(portNumber)+".log";
+    outputFileName= "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(portNumber)+".log";
 
     QApplication a(argc, argv);
     qInstallMessageHandler(&Handler);

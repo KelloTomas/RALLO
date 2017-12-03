@@ -25,6 +25,7 @@ Layout::Layout(bool isEmulator, QWidget *parent) :
     showPortNumber = isEmulator;
     Queue = new QueueActions();
     modalWindow = new ModalWindow(Queue);
+    setWindowTitle("Raslo");
 }
 
 void Layout::Init(KeyboardHandler *keyboardCardRead, quint16 listenPort, QString progVersion)

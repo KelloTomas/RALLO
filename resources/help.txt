@@ -4,7 +4,7 @@ C++ program na zobrazovanie informacii primanych zo servera.
 
 
 spustenie:
-./QTTcpServer
+./Rasllo
 -h : this help
 -v : show version of program
 -e : emulator version (run in window insted of FullScreen)

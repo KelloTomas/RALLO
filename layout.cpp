@@ -185,19 +185,6 @@ void Layout::xmlInitFunction(QXmlStreamReader *xml)
     StopTimers();
 }
 
-void Layout::xmlGetQueueFunction()
-{
-    if (Queue->empty())
-    {
-        if (DebugFunctionGetQueue)
-            qDebug() << "GetQue - Empty queue";
-    }
-    else
-    {
-        messageToSend.append(Queue->getAllInXML());
-    }
-}
-
 void Layout::xmlMessageFunction(QXmlStreamReader *xml)
 {
     QString title, msg;
@@ -537,11 +524,6 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                                 xmlInitFunction(xml);
                                 xml->skipCurrentElement();
                             }
-                            else if (xml->name() == "GetQue")
-                            {
-                                xmlGetQueueFunction();
-                                xml->skipCurrentElement();
-                            }
                             else if (xml->name() == "Message")
                             {
                                 xmlMessageFunction(xml);
@@ -732,9 +714,21 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
         QPushButton *pB = ui->centralWidget->findChild<QPushButton*>(rx.capturedTexts().at(1));
         if (pB != nullptr)
         {
-            connect(pB, &QPushButton::clicked, [=](){
-                Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
-            });
+            if (rx.capturedTexts().at(1) == "testPlayAccpetBtn123")
+            {
+                connect(pB, &QPushButton::clicked, [=](){ qDebug() << "Beep accept"; beep->BeepGPIO(500,0,1); });
+            }
+            else if (rx.capturedTexts().at(1) == "testPlayErrorBtn123")
+            {
+                connect(pB, &QPushButton::clicked, [=](){ qDebug() << "Beep error"; beep->BeepGPIO(300,300,3); });
+            }
+            else
+            {
+                connect(pB, &QPushButton::clicked, [=](){
+                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
+                    emit MessageToSend(Queue->getAllInXML());
+                });
+            }
         }
         else
         {
@@ -842,4 +836,5 @@ bool Layout::EditQObjectAtribute(QString id, QString attribute, QString newValue
 void Layout::AddCardReadedEvent(QString CardNumber)
 {
     Queue->append(QueueItem(QueueItemEnum::CardRead, CardNumber));
+    emit MessageToSend(Queue->getAllInXML());
 }

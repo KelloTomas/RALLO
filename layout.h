@@ -67,6 +67,9 @@ public:
     const bool DebugFunctionGetQueue = false;
 #endif
 
+signals:
+    void MessageToSend(QString msg);
+
 public slots:
     void UpdateTime();
     void UpdateIpAddressOnLayout();

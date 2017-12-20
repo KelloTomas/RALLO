@@ -83,22 +83,22 @@ int main(int argc, char *argv[])
     if(isEmulator)
     {
         rasllo->layout->show();
-        rasllo->layout->setFixedSize(800, 480);
+        server->layout->setFixedSize(800, 480);
     }
     else
     {
         // if I set geometry, app window doesn't have border with close button
         QDesktopWidget *desktop = new QDesktopWidget();
         if (displayID < desktop->screenCount())
-            rasllo->layout->setGeometry(desktop->screenGeometry(displayID));
+            server->layout->setGeometry(desktop->screenGeometry(displayID));
         else
             qWarning() << "displayID is greater than number of displays";
-        rasllo->layout->showFullScreen();
+        server->layout->showFullScreen();
         QApplication::setOverrideCursor(Qt::BlankCursor);
     }
 
     a.installEventFilter(keyboardCardRead);
-    QTimer::singleShot(0, rasllo, SLOT(Start()));
+    QTimer::singleShot(0, server, SLOT(Start()));
 
     RemoveOldLogs(logs);
     return a.exec();

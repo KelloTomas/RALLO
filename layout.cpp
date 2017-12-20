@@ -732,10 +732,9 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
         QPushButton *pB = ui->centralWidget->findChild<QPushButton*>(rx.capturedTexts().at(1));
         if (pB != nullptr)
         {
-                connect(pB, &QPushButton::clicked, [=](){
-                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, "halo"));
-                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
-                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, "toto")); });
+            connect(pB, &QPushButton::clicked, [=](){
+                Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
+            });
         }
         else
         {
@@ -759,7 +758,7 @@ bool Layout::EditQObjectAtribute(QString id, QString attribute, QString newValue
     {
         //if (typeid(*object) == typeid(QWidget))
         //{
-            object->setProperty("class", newValue);
+        object->setProperty("class", newValue);
         /*}
         else
         {

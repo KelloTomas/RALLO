@@ -34,7 +34,6 @@ void BeepSound::BeepGPIO(double lengthMSec, double delayMSec, int count)
         this->OneBeep(lengthMSec);
     }
 #else
-    delayMSec++; lengthMSec++; // silent warnings
     if (count == 1)
         QSound::play("beep.wav");
     else

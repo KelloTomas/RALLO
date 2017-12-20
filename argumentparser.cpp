@@ -5,7 +5,6 @@
 #include <QDebug>
 ArgumentParser::ArgumentParser()
 {
-
 }
 
 bool ArgumentParser::Parse(int argc, char *argv[], int* portNumber, int* displayID, bool* emulator, int* logs, QString programVersion)

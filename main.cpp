@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     qInstallMessageHandler(&Handler);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
-    Rasllo *rasllo = new Rasllo(isEmulator);
-    rasllo->Init(keyboardCardRead, portNumber, Layout::XMLVer() + " - " + programVersion);
+    Rasllo *rasllo = new Rasllo();
+    rasllo->Init(keyboardCardRead, isEmulator, portNumber, Layout::XMLVer() + " - " + programVersion);
 
 
     if(isEmulator)

@@ -1,8 +1,7 @@
 #include "rasllo.h"
 
-Rasllo::Rasllo(bool isEmulator, QWidget *) : networkSession()
+Rasllo::Rasllo(QWidget *) : networkSession()
 {
-    layout = new Layout(isEmulator);
 }
 void Rasllo::closeAllConnections()
 {
@@ -34,9 +33,10 @@ Rasllo::~Rasllo()
     closeAllConnections();
 }
 
-void Rasllo::Init(KeyboardHandler *keyboardCardRead, uint ListenPort, QString progVer)
+void Rasllo::Init(KeyboardHandler *keyboardCardRead, bool isEmulator, uint ListenPort, QString progVer)
 {
     listenPort = ListenPort;
+    layout = new Layout(isEmulator, listenPort);
     tcpServer = new QTcpServer();
     layout->Init(keyboardCardRead, listenPort, progVer);
 }

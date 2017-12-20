@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">background:white;</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="4,8,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="4,8,0">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -266,74 +266,6 @@
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2,1,1,2">
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Ignored</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="testPlayAccpetBtn123">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border:none;</string>
-       </property>
-       <property name="text">
-        <string>Accept</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="testPlayErrorBtn123">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border:none;</string>
-       </property>
-       <property name="text">
-        <string>Error</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Ignored</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,0,2">

@@ -14,7 +14,7 @@ Layout::~Layout()
         delete IPUpdateTimer;
 }
 
-Layout::Layout(bool isEmulator, QWidget *parent) :
+Layout::Layout(bool isEmulator, int port, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Layout)
 {
@@ -25,7 +25,7 @@ Layout::Layout(bool isEmulator, QWidget *parent) :
     showPortNumber = isEmulator;
     Queue = new QueueActions();
     modalWindow = new ModalWindow(Queue);
-    setWindowTitle("Raslo");
+    setWindowTitle("Raslo -p " + QString::number(port));
 }
 
 void Layout::Init(KeyboardHandler *keyboardCardRead, quint16 listenPort, QString progVersion)
@@ -732,19 +732,10 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
         QPushButton *pB = ui->centralWidget->findChild<QPushButton*>(rx.capturedTexts().at(1));
         if (pB != nullptr)
         {
-            if (rx.capturedTexts().at(1) == "testPlayAccpetBtn123")
-            {
-                connect(pB, &QPushButton::clicked, [=](){ qDebug() << "Beep accept"; beep->BeepGPIO(500,0,1); });
-            }
-            else if (rx.capturedTexts().at(1) == "testPlayErrorBtn123")
-            {
-                connect(pB, &QPushButton::clicked, [=](){ qDebug() << "Beep error"; beep->BeepGPIO(300,300,3); });
-            }
-            else
-            {
-                connect(pB, &QPushButton::clicked, [=](){ Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1))); });
-                //pB->show(); // ToK neviem preco to tu je. Treba odskusat vymazat prikaz
-            }
+                connect(pB, &QPushButton::clicked, [=](){
+                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, "halo"));
+                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
+                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, "toto")); });
         }
         else
         {

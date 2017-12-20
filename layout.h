@@ -34,7 +34,7 @@ class Layout : public QMainWindow
     Q_OBJECT
 
 public:
-    Layout(bool isEmulator, QWidget *parent = 0);
+    Layout(bool isEmulator, int port, QWidget *parent = 0);
     ~Layout();
     static QString XMLVer() { return "1.0.0.0"; }
     ModalWindow *modalWindow;

@@ -22,10 +22,10 @@ class Rasllo : public QObject
     Q_OBJECT
 
 public:
-    Rasllo(bool isEmulator, QWidget *parent = 0);
+    Rasllo(QWidget *parent = 0);
     ~Rasllo();
     Layout *layout;
-    void Init(KeyboardHandler *keyboardCardRead, uint ListenPort, QString progVer);
+    void Init(KeyboardHandler *keyboardCardRead, bool isEmulator, uint ListenPort, QString progVer);
 
     vector<QTcpSocket*> clientConnection;
 private slots:

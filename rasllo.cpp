@@ -1,7 +1,13 @@
 #include "rasllo.h"
 
-Rasllo::Rasllo(QWidget *) : networkSession()
+Rasllo::Rasllo(Config *appConfig, QWidget *) : networkSession()
 {
+    this->AppConfig = appConfig;
+    layout = new Layout(appConfig);
+    tcpServer = new QTcpServer();
+
+
+
 }
 void Rasllo::closeAllConnections()
 {
@@ -33,33 +39,27 @@ Rasllo::~Rasllo()
     closeAllConnections();
 }
 
-void Rasllo::Init(KeyboardHandler *keyboardCardRead, bool isEmulator, uint ListenPort, QString progVer)
+void Rasllo::Init(KeyboardHandler *keyboardCardRead)
 {
-    listenPort = ListenPort;
-    layout = new Layout(isEmulator, listenPort);
-    tcpServer = new QTcpServer();
-    layout->Init(keyboardCardRead, listenPort, progVer);
+    connect(layout, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
+    connect(layout->modalWindow, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
+    connect(keyboardCardRead, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
+    layout->Init();
+#ifdef ForRaspberryPi
+    QProcess proc;
+    proc.start("xset s off");
+    proc.waitForFinished();
+    proc.start("xset -dpms");
+    proc.waitForFinished();
+    proc.start("xset s noblank");
+    proc.waitForFinished();
+#endif
 }
 
 void Rasllo::Start()
 {
-    layout->Start();
-    qDebug() << "Rasllo sa spustil, verzia XML: " << layout->XMLVer();
+    qDebug() << "Rasllo starting TCP server, version: " << AppConfig->programVersion;
 
-    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("ISO-8859-15"));
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-
-
-#ifdef Gestures // pokus o spustenie gest
-    ui->centralWidget->grabGesture(Qt::SwipeGesture);
-    /*
-    TapGesture
-    TapAndHoldGesture
-    PanGesture
-    PinchGesture
-    SwipeGesture
-    */
-#endif
 
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
@@ -85,20 +85,18 @@ void Rasllo::Start()
         sessionOpened();
     }
     QObject::connect(tcpServer, &QTcpServer::newConnection, this, &Rasllo::newConnectionHandler);
-
-    layout->AddEventToQueue(QueueItem(QueueItemEnum::JustStarted, nullptr));
 }
 
 void Rasllo::sessionOpened()
 {
     // Save the used configuration
     if (networkSession) {
-        QNetworkConfiguration config = networkSession->configuration();
+        QNetworkConfiguration netConfig = networkSession->configuration();
         QString id;
-        if (config.type() == QNetworkConfiguration::UserChoice)
+        if (netConfig.type() == QNetworkConfiguration::UserChoice)
             id = networkSession->sessionProperty(QLatin1String("UserChoiceConfiguration")).toString();
         else
-            id = config.identifier();
+            id = netConfig.identifier();
 
         QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
         settings.beginGroup(QLatin1String("QtNetwork"));
@@ -106,10 +104,9 @@ void Rasllo::sessionOpened()
         settings.endGroup();
     }
 
-    if (!tcpServer->listen(QHostAddress::Any, listenPort))
+    if (!tcpServer->listen(QHostAddress::Any, AppConfig->portNumber))
     {
         layout->ShowMessage(UnableToStartServer + tcpServer->errorString());
-        listenPort = 0;
     }
     else
     {
@@ -176,15 +173,12 @@ void Rasllo::readFromServer()
 
         // orez priate data ktore boli spracovane a pokracuj so zvyskom spravy
         inputData = inputData.mid(endIndex+6);
-
-        SendResponse(layout->GetResponse());
-
         if (inputData.isEmpty())
             break;
     }
 }
 
-bool Rasllo::SendResponse(QString message)
+bool Rasllo::SendMessageToServer(QString message)
 {
     if (clientConnection.empty())
         return false;
@@ -207,4 +201,8 @@ void Rasllo::clientDisconected()
 {
     layout->modalWindow->CloseWindow();
     layout->ShowMessage(ServerWasDisconnected);
+}
+void Rasllo::sendMessage(QString msg)
+{
+    SendMessageToServer("<RPO>" + msg + "</RPO>");
 }

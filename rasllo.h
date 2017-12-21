@@ -14,6 +14,7 @@
 #include <QMutex>
 
 #include "layout.h"
+#include "config.h"
 
 
 
@@ -22,10 +23,10 @@ class Rasllo : public QObject
     Q_OBJECT
 
 public:
-    Rasllo(QWidget *parent = 0);
+    Rasllo(Config *AppConfig, QWidget *parent = 0);
     ~Rasllo();
     Layout *layout;
-    void Init(KeyboardHandler *keyboardCardRead, bool isEmulator, uint ListenPort, QString progVer);
+    void Init(KeyboardHandler *keyboardCardRead);
 
     vector<QTcpSocket*> clientConnection;
 private slots:
@@ -34,12 +35,13 @@ private slots:
     void readFromServer();
     void newConnectionHandler();
     void clientDisconected();
+    void sendMessage(QString msg);
 
 private:
+    Config *AppConfig;
     QString inputData;
-    bool SendResponse(QString message);
+    bool SendMessageToServer(QString message);
     QTcpServer *tcpServer;
-    quint16 listenPort;
     QMutex mutex;
     QNetworkSession *networkSession;
     QString ServerWasDisconnected = "Server bol odpojený";

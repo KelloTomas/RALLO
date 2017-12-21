@@ -15,15 +15,13 @@
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
 
-#include "errors.h"
-#include "queueitem.h"
 #include "beepsound.h"
 #include "rfid_rc522.h"
 #include "serialcardread.h"
 #include "keyboardhandler.h"
 #include "modalwindow.h"
-#include "queueactions.h"
 #include "ui_rasllo.h"
+#include "config.h"
 
 namespace Ui {
 class Layout;
@@ -34,15 +32,12 @@ class Layout : public QMainWindow
     Q_OBJECT
 
 public:
-    Layout(bool isEmulator, int port, QWidget *parent = 0);
+    Layout(Config *AppConfig, QWidget *parent = 0);
     ~Layout();
-    static QString XMLVer() { return "1.0.0.0"; }
     ModalWindow *modalWindow;
-    void Init(KeyboardHandler *keyboardCardRead, quint16 listenPort, QString progVersion);
-    void Start();
+    void Init();
     void ParseXmlData(QXmlStreamReader *xml);
     void StopTimers();
-    QString GetResponse();
 
 #ifdef QT_DEBUG
     const bool Debug = false;
@@ -53,7 +48,6 @@ public:
     const bool DebugFindButton = false;
     const bool DebugStoredData = false;
     const bool DebugFunctionAll = false;
-    const bool DebugFunctionGetQueue = false;
 #else
     // ForRaspberryPi & RELEASE
     const bool Debug = false;
@@ -64,7 +58,6 @@ public:
     const bool DebugFindButton = false;
     const bool DebugStoredData = false;
     const bool DebugFunctionAll = false;
-    const bool DebugFunctionGetQueue = false;
 #endif
 
 signals:
@@ -74,23 +67,14 @@ public slots:
     void UpdateTime();
     void UpdateIpAddressOnLayout();
     void ShowMessage(QString message);
-    void AddEventToQueue(QueueItem item);
-    void AddCardReadedEvent(QString CardNumber);
 
 private:
     Ui::Layout *ui;
-    SerialCardRead *serialCard;
-    KeyboardHandler *KeyboardCardRead;
     QVBoxLayout *mainLayout;
-    bool showPortNumber;
 
-    quint16 ListenPort;
+    Config *AppConfig;
     BeepSound *beep;
-    Errors errors;
-    Errors warnings;
-    QueueActions *Queue;
     QString CurrentLayout;
-    QString ProgramVersion;
     QString messageToSend;
     QString initLayoutName = "InitLayout.ui";
     QString VerziaTitle = "Verzia: ";
@@ -107,7 +91,6 @@ private:
     void ShowInitLayout();
     void SetTimersForTime();
     void xmlInitFunction(QXmlStreamReader *xml);
-    void xmlGetQueueFunction();
     void xmlMessageFunction(QXmlStreamReader *xml);
     void xmlDisplayFunction(QXmlStreamReader *xml);
     void xmlStoreRefFunction();

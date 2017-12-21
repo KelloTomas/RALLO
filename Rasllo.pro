@@ -30,33 +30,28 @@ SOURCES += \
         rasllo.cpp \
     argumentparser.cpp \
     beepsound.cpp \
-    errors.cpp \
     gpioclass.cpp \
     keyboardhandler.cpp \
     layout.cpp \
     modalwindow.cpp \
-    queueactions.cpp \
-    queueitem.cpp \
     rfid_rc522.cpp \
     serialcardread.cpp \
-    serialporthandler.cpp
+    serialporthandler.cpp \
+    erritem.cpp
 
 HEADERS += \
     argumentparser.h \
     beepsound.h \
     erritem.h \
-    errors.h \
     gpioclass.h \
     keyboardhandler.h \
     layout.h \
     modalwindow.h \
-    queueactions.h \
-    queueitem.h \
-    queueitemenum.h \
     rasllo.h \
     rfid_rc522.h \
     serialcardread.h \
-    serialporthandler.h
+    serialporthandler.h \
+    config.h
 
 FORMS += \
     rasllo.ui

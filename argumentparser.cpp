@@ -7,7 +7,7 @@ ArgumentParser::ArgumentParser()
 {
 }
 
-bool ArgumentParser::Parse(int argc, char *argv[], int* portNumber, int* displayID, bool* emulator, int* logs, QString programVersion)
+bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
 {
         for (int i = 1; i < argc; i++) // prvy argument je nazov programu
         {
@@ -29,7 +29,7 @@ bool ArgumentParser::Parse(int argc, char *argv[], int* portNumber, int* display
             {
                 if (argc > i+1)
                 {
-                    *portNumber = atoi(argv[++i]);
+                    config->portNumber = atoi(argv[++i]);
                 }
                 else
                 {
@@ -41,7 +41,7 @@ bool ArgumentParser::Parse(int argc, char *argv[], int* portNumber, int* display
             {
                 if (argc > i+1)
                 {
-                    *displayID = atoi(argv[++i]);
+                    config->displayID = atoi(argv[++i]);
                 }
                 else
                 {
@@ -51,18 +51,18 @@ bool ArgumentParser::Parse(int argc, char *argv[], int* portNumber, int* display
             }
             else if (!strcmp(argv[i], "-v"))
             {
-                qDebug() << "Verzia programu: " << programVersion;
+                qDebug() << "Verzia programu: " << config->programVersion;
                 return false;
             }
             else if (!strcmp(argv[i], "-e"))
             {
-                *emulator = true;
+                config->isEmulator = true;
             }
             else if (!strcmp(argv[i], "-l"))
             {
                 if (argc > i+1)
                 {
-                    *logs = atoi(argv[++i]);
+                    config->logs = atoi(argv[++i]);
                 }
                 else
                 {

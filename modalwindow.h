@@ -10,11 +10,10 @@
 #include <QDesktopWidget>
 #include <QStatusBar>
 #include <QGridLayout>
-#include "queueactions.h"
 
 
 
-class ModalWindow : QObject
+class ModalWindow : public QObject
 {
     Q_OBJECT
 
@@ -23,11 +22,12 @@ private:
     void SetWindowAsModal(QMainWindow *window);
     QPushButton *CreateButtonToModal(QString name, QString text, int width);
     QLabel *CreateTextToModal(QString text);
-    QueueActions *Queue;
 private slots:
     void modalBtnClicked();
+signals:
+    void MessageToSend(QString msg);
 public:
-    ModalWindow(QueueActions *queue);
+    ModalWindow();
     bool ShowModal(QString message, QList<QPair<QString, QString>> buttonsNames);
     bool CloseWindow();
 };

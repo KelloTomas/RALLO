@@ -4,42 +4,52 @@ Layout::~Layout()
 {
     if (ui != nullptr)
         delete ui;
-    if (KeyboardCardRead != nullptr)
-        delete KeyboardCardRead;
-    if (serialCard != nullptr)
-        delete serialCard;
     if (CurrTimeTimer != nullptr)
         delete CurrTimeTimer;
     if (IPUpdateTimer != nullptr)
         delete IPUpdateTimer;
 }
 
-Layout::Layout(bool isEmulator, int port, QWidget *parent) :
+Layout::Layout(Config *appConfig, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Layout)
 {
+    AppConfig = appConfig;
+    beep = new BeepSound("16");
+    CurrTimeTimer = new QTimer(this);
+    IPUpdateTimer = new QTimer(this);
+    modalWindow = new ModalWindow();
+
     ui->setupUi(this);
     statusBar()->hide();
     ui->mainToolBar->hide();
     ui->centralWidget->setContentsMargins(0,0,0,0);
-    showPortNumber = isEmulator;
-    Queue = new QueueActions();
-    modalWindow = new ModalWindow(Queue);
-    setWindowTitle("Raslo -p " + QString::number(port));
+    setWindowTitle("Raslo -p " + QString::number(appConfig->portNumber));
+
+    if(appConfig->isEmulator)
+    {
+        show();
+        setFixedSize(800, 480);
+    }
+    else
+    {
+        // if I set geometry, app window doesn't have border with close button
+        QDesktopWidget *desktop = new QDesktopWidget();
+        if (appConfig->displayID < desktop->screenCount())
+            setGeometry(desktop->screenGeometry(appConfig->displayID));
+        else
+            qWarning() << "displayID is greater than number of displays";
+        showFullScreen();
+        QApplication::setOverrideCursor(Qt::BlankCursor);
+    }
 }
 
-void Layout::Init(KeyboardHandler *keyboardCardRead, quint16 listenPort, QString progVersion)
+void Layout::Init()
 {
-    ProgramVersion = progVersion;
-    ListenPort = listenPort;
-    beep = new BeepSound("16");
-    CurrTimeTimer = new QTimer(this);
-    IPUpdateTimer = new QTimer(this);
+    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("ISO-8859-15"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
     connect(CurrTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
     connect(IPUpdateTimer, SIGNAL(timeout()), this, SLOT(UpdateIpAddressOnLayout()));
-
-    // USB citacka kariet ktora sa chova ako virtualna klavesnica
-    KeyboardCardRead = keyboardCardRead;
 
 #ifdef Serial // treba opravit citanie. Cita to nezmysli
     // RFID proxy ctecka
@@ -53,33 +63,20 @@ void Layout::Init(KeyboardHandler *keyboardCardRead, quint16 listenPort, QString
 
 }
 
-void Layout::Start()
-{
-    QObject::connect(KeyboardCardRead, SIGNAL(CardReaded(QString)), this, SLOT(AddCardReadedEvent(QString)));
-#ifdef Serial
-    serialCard->StartReading();
-    QObject::connect(serialCard, SIGNAL(CardReaded(QString)), this, SLOT(AddCardReadedEvent(QString)));
-#endif
-#ifdef RFIDctecka
-    QObject::connect(rfid, SIGNAL(CardReaded(QString)), this, SLOT(AddCardReadedEvent(QString)));
-#endif
-
-}
-
 void Layout::SetTextsOnLayout(QString message)
 {
     EditQObjectAtribute("message", "text", message);
     EditQObjectAtribute("DNSname", "text", QHostInfo::localHostName());
-    if (showPortNumber)
+    if (AppConfig->isEmulator)
     {
-        EditQObjectAtribute("PortNumber", "text", QString::number(ListenPort));
+        EditQObjectAtribute("PortNumber", "text", QString::number(AppConfig->portNumber));
     }
     else
     {
         EditQObjectAtribute("PortNumber", "text", " ");
         EditQObjectAtribute("PortNumberTitle", "text", " ");
     }
-    EditQObjectAtribute("VersionNumber", "text", VerziaTitle + ProgramVersion);
+    EditQObjectAtribute("VersionNumber", "text", VerziaTitle + AppConfig->portNumber);
     EditQObjectAtribute("TimeLast", "text", QDateTime::currentDateTime().toString("hh:mm:ss"));
     if (QDateTime::currentDateTime() < QDateTime::fromString("2019", "yyyy"))
         EditQObjectAtribute("autor", "text", " ");
@@ -132,11 +129,6 @@ void Layout::UpdateIpAddressOnLayout()
     EditQObjectAtribute("IPNumber", "text", IPAddresses);
 }
 
-void Layout::AddEventToQueue(QueueItem item)
-{
-    Queue->append(item);
-}
-
 void Layout::xmlInitFunction(QXmlStreamReader *xml)
 {
     foreach (const QXmlStreamAttribute &storeAttr, xml->attributes())
@@ -145,7 +137,7 @@ void Layout::xmlInitFunction(QXmlStreamReader *xml)
         {
             if (Debug)
                 qDebug() << "StartKey - set to: " << storeAttr.value();
-            KeyboardCardRead->SetStartKey(storeAttr.value().toInt());
+            // ToDo KeyboardCardRead->SetStartKey(storeAttr.value().toInt());
         }
         else if (storeAttr.name() == "CurrentTime")
         {
@@ -163,7 +155,6 @@ void Layout::xmlInitFunction(QXmlStreamReader *xml)
     }
     Layouts.clear();
     References.clear();
-    Queue->clear();
     CurrentLayout.clear();
     qDeleteAll(ui->centralWidget->children());
 
@@ -209,7 +200,7 @@ void Layout::xmlMessageFunction(QXmlStreamReader *xml)
         {
             qWarning() << "Message - Title atribute is missing";
         }
-        errors.PushError("x", "Message - Title atribute is missing");
+        emit MessageToSend("Message - Title atribute is missing");
     }
     else if (msg.isEmpty() || msg.isNull())
     {
@@ -217,7 +208,7 @@ void Layout::xmlMessageFunction(QXmlStreamReader *xml)
         {
             qWarning() << "Message - Message atribute is missing";
         }
-        errors.PushError("x", "Message - Message atribute is missing");
+        emit MessageToSend("Message - Message atribute is missing");
     }
     else
     {
@@ -305,7 +296,7 @@ void Layout::xmlStoreRefFunction()
 {
     if (DebugWarnings)
         qWarning("Store Ref - NOT IMPLEMENTED ! ! !!!!!!! !");
-    errors.PushError("x", "Store ref Not implemented");
+    emit MessageToSend("Store ref Not implemented");
     if (DebugFunction)
         qDebug() << "StoreRef - ukladam referenciu: NOT IMPLEMENTED";
     /*
@@ -348,7 +339,7 @@ void Layout::xmlStoreLayoutFunction(QXmlStreamReader *xml)
                     layoutData.replace(ind, ((QString) regExp.capturedTexts().at(0)).length(), References[regExp.capturedTexts().at(1)]);
                 else
                 {
-                    errors.PushError("x", "need reference for: \"" + regExp.capturedTexts().at(1) + "\" (must set it with <StoreRef> TAG)");
+                    emit MessageToSend("need reference for: \"" + regExp.capturedTexts().at(1) + "\" (must set it with <StoreRef> TAG)");
                 }
                 ind += ((QString) regExp.capturedTexts().at(0)).length();
             }
@@ -461,7 +452,7 @@ void Layout::xmlModalFunction(QXmlStreamReader *xml)
         }
         else
         {
-            errors.PushError("x", "Unknow attribute in ModalFunction: " + storeAttr.name().toString());
+            emit MessageToSend("Unknow attribute in ModalFunction: " + storeAttr.name().toString());
         }
     }
     modalWindow->ShowModal(message, buttons);
@@ -486,7 +477,7 @@ void Layout::xmlShowFunction(QXmlStreamReader *xml)
                     qDebug() << "Show - rebuild layout to " + layoutName;
                 if (!Layouts.contains(layoutName) && layoutName != initLayoutName)
                 {
-                    errors.PushError("x", "Did not find layout with Id: " + layoutName);
+                    emit MessageToSend("Did not find layout with Id: " + layoutName);
                 }
                 else
                 {
@@ -498,25 +489,17 @@ void Layout::xmlShowFunction(QXmlStreamReader *xml)
         }
         else
         {
-            errors.PushError("x", "Unknow attribute in StoreLayout: " + storeAttr.name().toString());
+            emit MessageToSend("Unknow attribute in StoreLayout: " + storeAttr.name().toString());
         }
     }
 }
 
 void Layout::ParseXmlData(QXmlStreamReader *xml)
 {
-    bool isVerAttr = false;
-    if (xml->readNextStartElement())
+    while (xml->readNextStartElement())
     {
         if (xml->name() == "RPI")
         {
-            foreach(const QXmlStreamAttribute &attr, xml->attributes())
-            {
-                if (attr.name() == "Ver")
-                {
-                    isVerAttr = true;
-                    if (attr.value() == XMLVer())
-                    {
                         while (xml->readNextStartElement())
                         {
                             if (xml->name() == "Init")
@@ -574,66 +557,17 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                             {
                                 if (DebugWarnings)
                                     qWarning() << "Unknow ELEMENT name: " + xml->name().toString();
-                                errors.PushError("x", "Unknow ELEMENT name: " + xml->name().toString());
+                                emit MessageToSend("Unknow ELEMENT name: " + xml->name().toString());
                                 xml->skipCurrentElement();
                             }
                         } // end while loop
-                    }
-                    else
-                    {
-                        if (DebugWarnings)
-                            qWarning() << "Invalid Ver (Version) attribute number detected";
-                        errors.PushError("x", "Invalid Ver (Version) attribute number detected");
-                    }
-                }
-                else
-                {
-                    if (DebugWarnings)
-                        qWarning() << "Unknow attribut in RPI tag: " + attr.name().toString();
-                    errors.PushError("x", "Unknow attribut in RPI tag: " + attr.name().toString());
-                }
-            }
-            if (!isVerAttr)
-            {
-                if (DebugWarnings)
-                    qWarning() << "No Ver (Version) attribute in RPI found";
-                errors.PushError("x", "No Ver (Version) attribute in RPI found");
-                return;
-            }
         }
         else
         {
             if (DebugWarnings)
                 qWarning() << "RPI start tag is missing, founded: " + xml->name().toString();
-            errors.PushError("x", "RPI start tag is missing, founded: " + xml->name().toString());
+            emit MessageToSend("RPI start tag is missing, founded: " + xml->name().toString());
         }
-    }
-    else
-    {
-        if (DebugWarnings)
-            qWarning() << "No root element";
-        errors.PushError("x", "No root element");
-    }
-}
-
-QString Layout::GetResponse()
-{
-    if (errors.isEmpty())
-    {
-        if (messageToSend.isEmpty())
-        {
-            return "<RPO/>";
-        }
-        else
-        {
-            QString msg = messageToSend;
-            messageToSend.clear();
-            return ("<RPO>"+msg+"</RPO>");
-        }
-    }
-    else
-    {
-        return(("<RPO>"+errors.PopAllInXML()+"</RPO>"));
     }
 }
 
@@ -684,7 +618,7 @@ QString Layout::ModifyAttributeFromXML(QXmlStreamReader *xml)
         if (!EditQObjectAtribute(id, attribute, value))
         {
             qWarning() << "QObjekt " << id << " was not find in layout: " << CurrentLayout;
-            errors.PushError("x", "QObjekt " + id + " was not find in layout: " + xml->name().toString());
+            emit MessageToSend("QObjekt " + id + " was not find in layout: " + xml->name().toString());
         }
         return id + " -> " + value;
     }
@@ -725,8 +659,8 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
             else
             {
                 connect(pB, &QPushButton::clicked, [=](){
-                    Queue->append(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
-                    emit MessageToSend(Queue->getAllInXML());
+                    //emit MessageToSend(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
+                    emit MessageToSend("<ButtonClick TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Id=\"" + rx.capturedTexts().at(1) + "\"/>");
                 });
             }
         }
@@ -831,10 +765,4 @@ bool Layout::EditQObjectAtribute(QString id, QString attribute, QString newValue
         object->setProperty(attribute.toStdString().c_str(), newValue);
     }
     return true;
-}
-
-void Layout::AddCardReadedEvent(QString CardNumber)
-{
-    Queue->append(QueueItem(QueueItemEnum::CardRead, CardNumber));
-    emit MessageToSend(Queue->getAllInXML());
 }

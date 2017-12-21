@@ -1,7 +1,6 @@
 #include "modalwindow.h"
-ModalWindow::ModalWindow(QueueActions *queue)
+ModalWindow::ModalWindow()
 {
-    Queue = queue;
 }
 
 void ModalWindow::SetWindowAsModal(QMainWindow *window)
@@ -25,7 +24,8 @@ void ModalWindow::SetWindowAsModal(QMainWindow *window)
 
 void ModalWindow::modalBtnClicked()
 {
-    Queue->append(QueueItem(QueueItemEnum::ButtonClick,QObject::sender()->objectName()));
+    //emit MessageToSend(QObject::sender()->objectName());
+    emit MessageToSend("ButtonOnModalWindowsClickedt");
 }
 
 QPushButton *ModalWindow::CreateButtonToModal(QString name, QString text, int width)

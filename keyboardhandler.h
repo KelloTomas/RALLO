@@ -15,7 +15,7 @@ public:
 signals:
     void CardReaded(QString cardNumber);
 private:
-      int StartKey = 0; // `==96
+      int StartKey = 96; // `==96
       bool started = false;
       QString CardNumber;
 };

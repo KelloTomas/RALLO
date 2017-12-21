@@ -14,6 +14,7 @@ public:
 
     QString Id;
     QString Message;
+    QString getXML();
 };
 
 #endif // ERRITEM_H

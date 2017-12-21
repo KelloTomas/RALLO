@@ -1,15 +1,13 @@
 #ifndef ARGUMENTPARSER_H
 #define ARGUMENTPARSER_H
-
+#include "config.h"
 #include <QString>
-
-
 
  class ArgumentParser
 {
 public:
      ArgumentParser();
-     static bool Parse(int argc, char *argv[], int* portNumber, int* displayID, bool* emulator, int* logs, QString programVersion);
+     static bool Parse(int argc, char *argv[], Config *config);
 };
 
 #endif // ARGUMENTPARSER_H

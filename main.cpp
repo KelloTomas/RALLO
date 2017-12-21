@@ -17,7 +17,7 @@ void RemoveOldLogs(int NumberOfStoredLog)
 }
 QString outputFileName;
 
-void Handler(QtMsgType type, const QMessageLogContext &, const QString &msg)
+void LogHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
 QString txt;
 switch (type) {
@@ -51,6 +51,7 @@ ts << txt << endl;
 
 int main(int argc, char *argv[])
 {
+    Config *config = new Config();
     //verzia - 003"; // odtesotavan na RPi dlhodobo
     //verzia - 010"; // implementovane styly aplikacie
     //verzia - 020"; // asynchronny qmessage box
@@ -66,40 +67,20 @@ int main(int argc, char *argv[])
     // 17.09.12"; // Pre windows sa beep zvuk nasobi 11x
     // 17.09.19"; // pre Windows prehrava zvuky beep.vaw a error.vaw
     // 17.11.23"; // Implementacia Modalneho okna
-    QString programVersion = "17.11.23"; // New:
-    int displayID = 0, logs = 10, portNumber = 15000;
-    bool isEmulator = false;
-    if(!ArgumentParser::Parse(argc, argv, &portNumber, &displayID, &isEmulator, &logs, Layout::XMLVer() + " - " + programVersion))
+    config->programVersion = "17.11.23"; // New:
+    if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
-    outputFileName= "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(portNumber)+".log";
+    outputFileName= "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
 
     QApplication a(argc, argv);
-    qInstallMessageHandler(&Handler);
+    qInstallMessageHandler(&LogHandler);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
-    Rasllo *rasllo = new Rasllo();
-    rasllo->Init(keyboardCardRead, isEmulator, portNumber, Layout::XMLVer() + " - " + programVersion);
-
-
-    if(isEmulator)
-    {
-        rasllo->layout->show();
-        server->layout->setFixedSize(800, 480);
-    }
-    else
-    {
-        // if I set geometry, app window doesn't have border with close button
-        QDesktopWidget *desktop = new QDesktopWidget();
-        if (displayID < desktop->screenCount())
-            server->layout->setGeometry(desktop->screenGeometry(displayID));
-        else
-            qWarning() << "displayID is greater than number of displays";
-        server->layout->showFullScreen();
-        QApplication::setOverrideCursor(Qt::BlankCursor);
-    }
+    Rasllo *rasllo = new Rasllo(config);
+    rasllo->Init(keyboardCardRead);
 
     a.installEventFilter(keyboardCardRead);
-    QTimer::singleShot(0, server, SLOT(Start()));
+    QTimer::singleShot(0, rasllo, SLOT(Start()));
 
-    RemoveOldLogs(logs);
+    RemoveOldLogs(config->logs);
     return a.exec();
 }

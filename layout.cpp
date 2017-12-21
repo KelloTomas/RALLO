@@ -24,10 +24,10 @@ Layout::Layout(Config *appConfig, QWidget *parent) :
     statusBar()->hide();
     ui->mainToolBar->hide();
     ui->centralWidget->setContentsMargins(0,0,0,0);
-    setWindowTitle("Raslo -p " + QString::number(appConfig->portNumber));
 
     if(appConfig->isEmulator)
     {
+        setWindowTitle("Raslo -p " + QString::number(appConfig->portNumber));
         show();
         setFixedSize(800, 480);
     }
@@ -76,7 +76,7 @@ void Layout::SetTextsOnLayout(QString message)
         EditQObjectAtribute("PortNumber", "text", " ");
         EditQObjectAtribute("PortNumberTitle", "text", " ");
     }
-    EditQObjectAtribute("VersionNumber", "text", VerziaTitle + AppConfig->portNumber);
+    EditQObjectAtribute("VersionNumber", "text", VerziaTitle + AppConfig->programVersion);
     EditQObjectAtribute("TimeLast", "text", QDateTime::currentDateTime().toString("hh:mm:ss"));
     if (QDateTime::currentDateTime() < QDateTime::fromString("2019", "yyyy"))
         EditQObjectAtribute("autor", "text", " ");

@@ -10,7 +10,7 @@
 #include <QDesktopWidget>
 #include <QStatusBar>
 #include <QGridLayout>
-
+#include <QDateTime>
 
 
 class ModalWindow : public QObject

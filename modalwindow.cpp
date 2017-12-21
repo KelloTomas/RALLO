@@ -25,7 +25,7 @@ void ModalWindow::SetWindowAsModal(QMainWindow *window)
 void ModalWindow::modalBtnClicked()
 {
     //emit MessageToSend(QObject::sender()->objectName());
-    emit MessageToSend("ButtonOnModalWindowsClickedt");
+    emit MessageToSend("<ButtonClick TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Id=\"" + QObject::sender()->objectName() + "\"/>");
 }
 
 QPushButton *ModalWindow::CreateButtonToModal(QString name, QString text, int width)

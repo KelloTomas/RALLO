@@ -659,8 +659,8 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
             else
             {
                 connect(pB, &QPushButton::clicked, [=](){
-                    //emit MessageToSend(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
                     emit MessageToSend("<ButtonClick TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Id=\"" + rx.capturedTexts().at(1) + "\"/>");
+                    //emit MessageToSend(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
                 });
             }
         }

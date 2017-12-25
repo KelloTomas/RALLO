@@ -27,7 +27,7 @@ Layout::Layout(Config *appConfig, QWidget *parent) :
 
     if(appConfig->isEmulator)
     {
-        setWindowTitle("Raslo -p " + QString::number(appConfig->portNumber));
+        setWindowTitle("Rasllo -p " + QString::number(appConfig->portNumber));
         show();
         setFixedSize(800, 480);
     }
@@ -200,7 +200,7 @@ void Layout::xmlMessageFunction(QXmlStreamReader *xml)
         {
             qWarning() << "Message - Title atribute is missing";
         }
-        emit MessageToSend("Message - Title atribute is missing");
+        emitError("Message - Title atribute is missing");
     }
     else if (msg.isEmpty() || msg.isNull())
     {
@@ -208,7 +208,7 @@ void Layout::xmlMessageFunction(QXmlStreamReader *xml)
         {
             qWarning() << "Message - Message atribute is missing";
         }
-        emit MessageToSend("Message - Message atribute is missing");
+        emitError("Message - Message atribute is missing");
     }
     else
     {
@@ -296,7 +296,7 @@ void Layout::xmlStoreRefFunction()
 {
     if (DebugWarnings)
         qWarning("Store Ref - NOT IMPLEMENTED ! ! !!!!!!! !");
-    emit MessageToSend("Store ref Not implemented");
+    emitError("Store ref Not implemented");
     if (DebugFunction)
         qDebug() << "StoreRef - ukladam referenciu: NOT IMPLEMENTED";
     /*
@@ -339,7 +339,7 @@ void Layout::xmlStoreLayoutFunction(QXmlStreamReader *xml)
                     layoutData.replace(ind, ((QString) regExp.capturedTexts().at(0)).length(), References[regExp.capturedTexts().at(1)]);
                 else
                 {
-                    emit MessageToSend("need reference for: \"" + regExp.capturedTexts().at(1) + "\" (must set it with <StoreRef> TAG)");
+                    emitError("need reference for: \"" + regExp.capturedTexts().at(1) + "\" (must set it with <StoreRef> TAG)");
                 }
                 ind += ((QString) regExp.capturedTexts().at(0)).length();
             }
@@ -452,7 +452,7 @@ void Layout::xmlModalFunction(QXmlStreamReader *xml)
         }
         else
         {
-            emit MessageToSend("Unknow attribute in ModalFunction: " + storeAttr.name().toString());
+            emitError("Unknow attribute in ModalFunction: " + storeAttr.name().toString());
         }
     }
     modalWindow->ShowModal(message, buttons);
@@ -477,7 +477,7 @@ void Layout::xmlShowFunction(QXmlStreamReader *xml)
                     qDebug() << "Show - rebuild layout to " + layoutName;
                 if (!Layouts.contains(layoutName) && layoutName != initLayoutName)
                 {
-                    emit MessageToSend("Did not find layout with Id: " + layoutName);
+                    emitError("Did not find layout with Id: " + layoutName);
                 }
                 else
                 {
@@ -489,7 +489,7 @@ void Layout::xmlShowFunction(QXmlStreamReader *xml)
         }
         else
         {
-            emit MessageToSend("Unknow attribute in StoreLayout: " + storeAttr.name().toString());
+            emitError("Unknow attribute in StoreLayout: " + storeAttr.name().toString());
         }
     }
 }
@@ -498,7 +498,7 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
 {
     while (xml->readNextStartElement())
     {
-        if (xml->name() == "RPI")
+        if (xml->name() == "RSI")
         {
                         while (xml->readNextStartElement())
                         {
@@ -557,7 +557,7 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                             {
                                 if (DebugWarnings)
                                     qWarning() << "Unknow ELEMENT name: " + xml->name().toString();
-                                emit MessageToSend("Unknow ELEMENT name: " + xml->name().toString());
+                                emitError("Unknow ELEMENT name: " + xml->name().toString());
                                 xml->skipCurrentElement();
                             }
                         } // end while loop
@@ -565,8 +565,8 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
         else
         {
             if (DebugWarnings)
-                qWarning() << "RPI start tag is missing, founded: " + xml->name().toString();
-            emit MessageToSend("RPI start tag is missing, founded: " + xml->name().toString());
+                qWarning() << "RSI start tag is missing, founded: " + xml->name().toString();
+            emitError("RSI start tag is missing, founded: " + xml->name().toString());
         }
     }
 }
@@ -618,7 +618,7 @@ QString Layout::ModifyAttributeFromXML(QXmlStreamReader *xml)
         if (!EditQObjectAtribute(id, attribute, value))
         {
             qWarning() << "QObjekt " << id << " was not find in layout: " << CurrentLayout;
-            emit MessageToSend("QObjekt " + id + " was not find in layout: " + xml->name().toString());
+            emitError("QObjekt " + id + " was not find in layout: " + xml->name().toString());
         }
         return id + " -> " + value;
     }
@@ -660,7 +660,6 @@ QString Layout::ProcessLayoutButtons(QString inputLayout)
             {
                 connect(pB, &QPushButton::clicked, [=](){
                     emit MessageToSend("<ButtonClick TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Id=\"" + rx.capturedTexts().at(1) + "\"/>");
-                    //emit MessageToSend(QueueItem(QueueItemEnum::ButtonClick, rx.capturedTexts().at(1)));
                 });
             }
         }
@@ -765,4 +764,9 @@ bool Layout::EditQObjectAtribute(QString id, QString attribute, QString newValue
         object->setProperty(attribute.toStdString().c_str(), newValue);
     }
     return true;
+}
+
+void Layout::emitError(QString error)
+{
+    emit MessageToSend("<Error TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Message=\"" + error + "\"/>");
 }

@@ -59,6 +59,13 @@ public:
     const bool DebugStoredData = false;
     const bool DebugFunctionAll = false;
 #endif
+    QString NewConnectionEstablished = "Server bol pripojeny";
+    QString ServerWasDisconnected = "Server bol odpojený";
+    QString WaitingForServerToConnect = "Čakám na pripojenie servera";
+    QString UnableToStartServer = "Nepodarilo sa spustiť server: ";
+    QString initLayoutName = "InitLayout.ui";
+    QString VerziaTitle = "Verzia: ";
+    QString InitInProgress = "Prebehla inicializacia";
 
 signals:
     void MessageToSend(QString msg);
@@ -76,9 +83,6 @@ private:
     BeepSound *beep;
     QString CurrentLayout;
     QString messageToSend;
-    QString initLayoutName = "InitLayout.ui";
-    QString VerziaTitle = "Verzia: ";
-    QString InitInProgress = "Prebehla inicializacia";
     QTimer *CurrTimeTimer;
     QTimer *IPUpdateTimer;
     QMap<QString, QString> Layouts;
@@ -100,6 +104,7 @@ private:
     void xmlModalFunction(QXmlStreamReader *xml);
     void ShowLayout(QString layoutName);
     void xmlBeepFunction(QXmlStreamReader *xml);
+    void emitError(QString msg);
 };
 
 #endif // LAYOUT_H

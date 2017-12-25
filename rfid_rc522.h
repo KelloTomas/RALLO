@@ -1,9 +1,9 @@
 #ifndef RFID_RC522_H
 #define RFID_RC522_H
+/*
 
 #include <QProcess>
 #include <QDebug>
-
 
 class RFID_RC522: public QObject
 {
@@ -23,5 +23,5 @@ private:
       QString CardNumber;
       QProcess *proc;
 };
-
+*/
 #endif // RFID_RC522_H

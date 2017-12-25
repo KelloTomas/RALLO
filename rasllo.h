@@ -44,9 +44,6 @@ private:
     QTcpServer *tcpServer;
     QMutex mutex;
     QNetworkSession *networkSession;
-    QString ServerWasDisconnected = "Server bol odpojený";
-    QString WaitingForServerToConnect = "Čakám na pripojenie servera";
-    QString UnableToStartServer = "Nepodarilo sa spustiť server: ";
     void closeAllConnections();
 };
 

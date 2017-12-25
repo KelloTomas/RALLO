@@ -1,5 +1,5 @@
 #include "rfid_rc522.h"
-
+/*
 RFID_RC522::RFID_RC522()
 {
 }
@@ -38,3 +38,4 @@ void RFID_RC522::SetStopKey(int StopKey)
 {
     this->StopKey = StopKey;
 }
+*/

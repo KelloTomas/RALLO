@@ -8,7 +8,7 @@ QT       += core gui network uitools serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
-TARGET = Rasllo
+TARGET = RaslloApp
 TEMPLATE = app
 
 CONFIG += c++11 static # console
@@ -36,13 +36,11 @@ SOURCES += \
     modalwindow.cpp \
     rfid_rc522.cpp \
     serialcardread.cpp \
-    serialporthandler.cpp \
-    erritem.cpp
+    serialporthandler.cpp
 
 HEADERS += \
     argumentparser.h \
     beepsound.h \
-    erritem.h \
     gpioclass.h \
     keyboardhandler.h \
     layout.h \

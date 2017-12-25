@@ -34,6 +34,7 @@ void BeepSound::BeepGPIO(double lengthMSec, double delayMSec, int count)
         this->OneBeep(lengthMSec);
     }
 #else
+    lengthMSec++;delayMSec++; // to supress unused variable warning on windows
     if (count == 1)
         QSound::play("beep.wav");
     else

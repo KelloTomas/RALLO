@@ -5,9 +5,6 @@ Rasllo::Rasllo(Config *appConfig, QWidget *) : networkSession()
     this->AppConfig = appConfig;
     layout = new Layout(appConfig);
     tcpServer = new QTcpServer();
-
-
-
 }
 void Rasllo::closeAllConnections()
 {
@@ -106,17 +103,18 @@ void Rasllo::sessionOpened()
 
     if (!tcpServer->listen(QHostAddress::Any, AppConfig->portNumber))
     {
-        layout->ShowMessage(UnableToStartServer + tcpServer->errorString());
+        layout->ShowMessage(layout->UnableToStartServer + tcpServer->errorString());
     }
     else
     {
-        layout->ShowMessage(WaitingForServerToConnect);
+        layout->ShowMessage(layout->WaitingForServerToConnect);
     }
 }
 
 
 void Rasllo::newConnectionHandler()
 {
+    layout->ShowMessage(layout->NewConnectionEstablished + tcpServer->errorString());
     closeAllConnections();
     layout->StopTimers();
     inputData.clear();
@@ -147,12 +145,12 @@ void Rasllo::readFromServer()
 
     while (1)
     {
-        int startIndex = inputData.indexOf("<RPI");
+        int startIndex = inputData.indexOf("<RSI");
         if (startIndex == -1)
         {
             inputData.clear();
             if (layout->DebugWarnings)
-                qWarning() << "No START tag <RPI>";
+                qWarning() << "No START tag <RSI>";
             break;
         }
         else if (startIndex > 0)
@@ -162,8 +160,8 @@ void Rasllo::readFromServer()
             inputData = inputData.remove(0,startIndex);
         }
 
-        // ak sprava neobsahuje koncovy TAG /RPI
-        int endIndex = inputData.indexOf("</RPI>");
+        // ak sprava neobsahuje koncovy TAG /RSI
+        int endIndex = inputData.indexOf("</RSI>");
         if (endIndex == -1)
             break;
 
@@ -200,9 +198,9 @@ bool Rasllo::SendMessageToServer(QString message)
 void Rasllo::clientDisconected()
 {
     layout->modalWindow->CloseWindow();
-    layout->ShowMessage(ServerWasDisconnected);
+    layout->ShowMessage(layout->ServerWasDisconnected);
 }
 void Rasllo::sendMessage(QString msg)
 {
-    SendMessageToServer("<RPO>" + msg + "</RPO>");
+    SendMessageToServer("<RSO>" + msg + "</RSO>");
 }

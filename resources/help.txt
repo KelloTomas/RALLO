@@ -9,7 +9,7 @@ spustenie:
 -v : show version of program
 -e : emulator version (run in window insted of FullScreen)
 -p : define listening port [default 15000]
--d : define diplay ID where app will run [default 0]
+-d : define diplay ID, where app will run [default 0]
 -l : number of stored log files (one file == one day) [default 10]
 
 Tomas Kello

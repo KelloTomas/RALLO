@@ -1,6 +1,6 @@
 #ifndef SERIALPORTREADER_H
 #define SERIALPORTREADER_H
-/*
+
 #include <QtSerialPort/QSerialPort>
 
 #include <QTextStream>
@@ -32,5 +32,5 @@ private:
     QString cardNumber;
     bool isReading;
 };
-*/
+
 #endif

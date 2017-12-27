@@ -1,5 +1,5 @@
 #include "serialcardread.h"
-/*
+
 SerialCardRead::SerialCardRead(QObject *parent) : QObject(parent)
 {
 }
@@ -64,4 +64,4 @@ void SerialCardRead::handleReadyRead()
     }
 #endif
 }
-*/
+

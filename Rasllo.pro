@@ -6,7 +6,7 @@
 
 QT       += core gui network uitools serialport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets #multimedia
 
 TARGET = RaslloApp
 TEMPLATE = app
@@ -62,4 +62,4 @@ DISTFILES +=
 RESOURCES += \
     resources/resources.qrc
 
-#DEFINES += ForRaspberryPi
+DEFINES += Serial, ForRaspberryPi

@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QSerialPort>
-/*
+
 class SerialCardRead : public QObject
 {
     Q_OBJECT
@@ -24,5 +24,5 @@ private:
     QString cardNumber;
     bool isReading;
 };
-*/
+
 #endif // SERIALCARDREAD_H

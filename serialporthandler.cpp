@@ -1,5 +1,5 @@
 #include "serialporthandler.h"
-/*
+
 #include <QCoreApplication>
 
 QT_USE_NAMESPACE
@@ -71,4 +71,4 @@ void SerialPortHandler::handleError(QSerialPort::SerialPortError serialPortError
         qDebug() << QObject::tr("An I/O error occurred while reading the data from port %1, error: %2").arg(serialPort.portName()).arg(serialPort.errorString()) << endl;
     }
 }
-*/
+

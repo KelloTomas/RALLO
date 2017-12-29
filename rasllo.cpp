@@ -42,6 +42,9 @@ void Rasllo::Init(KeyboardHandler *keyboardCardRead)
     connect(layout->modalWindow, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
     connect(keyboardCardRead, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
     layout->Init();
+#ifdef SerialCardReader
+    //connect(layout->serialCard, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
+#endif
 #ifdef ForRaspberryPi
     QProcess proc;
     proc.start("xset s off");

@@ -6,14 +6,11 @@ SerialCardRead::SerialCardRead(QObject *parent) : QObject(parent)
 
 SerialCardRead::~SerialCardRead()
 {
-#ifdef ForRaspberryPi
     serialPort.close();
-#endif
 }
 
 void SerialCardRead::StartReading()
 {
-#ifdef ForRaspberryPi
     isReading = false;
 
     serialPort.setPortName("/dev/ttyS0");
@@ -29,12 +26,10 @@ void SerialCardRead::StartReading()
         qDebug() << "Started readind on serial port";
     }
     connect(&serialPort, &QSerialPort::readyRead, this, &SerialCardRead::handleReadyRead);
-#endif
 }
 
 void SerialCardRead::handleReadyRead()
 {
-#ifdef ForRaspberryPi
     char *data = new char[2];
     if (serialPort.read(data, 1) == 0)
     {
@@ -62,6 +57,5 @@ void SerialCardRead::handleReadyRead()
     {
         qDebug() << "CardRead (without start symbol) received symbol: " << data[0];
     }
-#endif
 }
 

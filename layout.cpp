@@ -51,7 +51,7 @@ void Layout::Init()
     connect(CurrTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
     connect(IPUpdateTimer, SIGNAL(timeout()), this, SLOT(UpdateIpAddressOnLayout()));
 
-#ifdef Serial // treba opravit citanie. Cita to nezmysli
+#ifdef SerialCardReader
     // RFID proxy ctecka
     serialCard = new SerialCardRead;
 #endif

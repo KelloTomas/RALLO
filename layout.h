@@ -38,6 +38,10 @@ public:
     void Init();
     void ParseXmlData(QXmlStreamReader *xml);
     void StopTimers();
+#ifdef SerialCardReader
+    // RFID proxy ctecka
+    SerialCardRead *serialCard;
+#endif
 
 #ifdef QT_DEBUG
     const bool Debug = false;

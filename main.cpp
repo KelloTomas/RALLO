@@ -67,7 +67,8 @@ int main(int argc, char *argv[])
     // 17.09.12"; // Pre windows sa beep zvuk nasobi 11x
     // 17.09.19"; // pre Windows prehrava zvuky beep.vaw a error.vaw
     // 17.11.23"; // Implementacia Modalneho okna
-    config->programVersion = "17.12.25"; // New: not acknowledge to messages RPO->RSO
+    // 17.12.25"; // New: not acknowledge to messages RPO->RSO
+    config->programVersion = "17.12.27"; // New: SerialRead
     if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
     outputFileName= "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";

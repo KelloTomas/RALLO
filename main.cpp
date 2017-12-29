@@ -4,10 +4,15 @@
 #include <QApplication>
 #include <QtGlobal>
 
+const string RPI_LOGFILE_PATHPREFIX = "/home/rasllo/logs";
 
 void RemoveOldLogs(int NumberOfStoredLog)
 {
+#ifdef ForRaspberryPi
+    QDir myDir(RPI_LOGFILE_PATHPREFIX);
+#else
     QDir myDir(QDir::currentPath());
+#endif
     myDir.setNameFilters(QStringList()<<"Rasllo-*");
     QStringList filesList = myDir.entryList();
     for (int i = 0; i < filesList.size()-NumberOfStoredLog; ++i) {
@@ -15,7 +20,7 @@ void RemoveOldLogs(int NumberOfStoredLog)
         myDir.remove(filesList[i]);
     }
 }
-QString outputFileName;
+QString outputFileName = "";
 
 void LogHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
@@ -68,10 +73,13 @@ int main(int argc, char *argv[])
     // 17.09.19"; // pre Windows prehrava zvuky beep.vaw a error.vaw
     // 17.11.23"; // Implementacia Modalneho okna
     // 17.12.25"; // New: not acknowledge to messages RPO->RSO
-    config->programVersion = "17.12.27"; // New: SerialRead
+    config->programVersion = "17.12.27"; // New: SerialRead, location of LOGs in RPI
     if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
-    outputFileName= "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
+#ifdef ForRaspberryPi
+    outputFileName = RPI_LOGFILE_PATHPREFIX;
+#endif
+    outputFileName += "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
 
     QApplication a(argc, argv);
     qInstallMessageHandler(&LogHandler);

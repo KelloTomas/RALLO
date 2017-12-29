@@ -62,4 +62,4 @@ DISTFILES +=
 RESOURCES += \
     resources/resources.qrc
 
-DEFINES += ForRaspberryPi, SerialCardReader
+DEFINES += SerialCardReader

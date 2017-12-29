@@ -13,13 +13,13 @@ void SerialCardRead::StartReading()
 {
     isReading = false;
 
-    serialPort.setPortName("/dev/ttyS0");
+    serialPort.setPortName("/dev/serial0");
     serialPort.setBaudRate(QSerialPort::Baud9600);
     serialPort.setDataBits(QSerialPort::Data8);
     serialPort.setParity(QSerialPort::NoParity);
     serialPort.setStopBits(QSerialPort::OneStop);
     if (!serialPort.open(QIODevice::ReadOnly)) {
-        qWarning() << QObject::tr("Failed to open port /dev/ttyS0, error: %2").arg(serialPort.errorString()) << endl;
+        qWarning() << QObject::tr("Failed to open port /dev/serial0, error: %2").arg(serialPort.errorString()) << endl;
     }
     else
     {

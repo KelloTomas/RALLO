@@ -54,3 +54,12 @@ sudo xinit /home/rasllo/QTTcpServer :0 -- -v &
 ```
 sudo dpkg-reconfigure tzdata
 ```
+### Test Serial read
+
+```
+sudo apt install minicom
+sudo minicom -s
+```
+ - Serial device /dev/serial0
+ - 9600 8N1
+ - CLOSE: CTRL+A, X

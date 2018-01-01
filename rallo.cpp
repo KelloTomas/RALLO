@@ -1,12 +1,12 @@
-#include "rasllo.h"
+#include "rallo.h"
 
-Rasllo::Rasllo(Config *appConfig, QWidget *) : networkSession()
+Rallo::Rallo(Config *appConfig, QWidget *) : networkSession()
 {
     this->AppConfig = appConfig;
     layout = new Layout(appConfig);
     tcpServer = new QTcpServer();
 }
-void Rasllo::closeAllConnections()
+void Rallo::closeAllConnections()
 {
     mutex.lock();
     while (!clientConnection.empty())
@@ -18,9 +18,9 @@ void Rasllo::closeAllConnections()
     mutex.unlock();
 }
 
-Rasllo::~Rasllo()
+Rallo::~Rallo()
 {
-    qDebug() << "Rasllo sa VYPINA................";
+    qDebug() << "Rallo sa VYPINA................";
     if (layout != nullptr)
         delete layout;
     if (networkSession != nullptr)
@@ -36,7 +36,7 @@ Rasllo::~Rasllo()
     closeAllConnections();
 }
 
-void Rasllo::Init(KeyboardHandler *keyboardCardRead)
+void Rallo::Init(KeyboardHandler *keyboardCardRead)
 {
     connect(layout, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
     connect(layout->modalWindow, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
@@ -57,9 +57,9 @@ void Rasllo::Init(KeyboardHandler *keyboardCardRead)
 #endif
 }
 
-void Rasllo::Start()
+void Rallo::Start()
 {
-    qDebug() << "Rasllo starting TCP server, version: " << AppConfig->programVersion;
+    qDebug() << "Rallo starting TCP server, version: " << AppConfig->programVersion;
 
 
     QNetworkConfigurationManager manager;
@@ -78,17 +78,17 @@ void Rasllo::Start()
         }
 
         networkSession = new QNetworkSession(config);
-        QObject::connect(networkSession, &QNetworkSession::opened, this, &Rasllo::sessionOpened);
+        QObject::connect(networkSession, &QNetworkSession::opened, this, &Rallo::sessionOpened);
 
         // zavola to tiez sessionOpened() cez slot
         networkSession->open();
     } else {
         sessionOpened();
     }
-    QObject::connect(tcpServer, &QTcpServer::newConnection, this, &Rasllo::newConnectionHandler);
+    QObject::connect(tcpServer, &QTcpServer::newConnection, this, &Rallo::newConnectionHandler);
 }
 
-void Rasllo::sessionOpened()
+void Rallo::sessionOpened()
 {
     // Save the used configuration
     if (networkSession) {
@@ -116,7 +116,7 @@ void Rasllo::sessionOpened()
 }
 
 
-void Rasllo::newConnectionHandler()
+void Rallo::newConnectionHandler()
 {
     layout->ShowMessage(layout->NewConnectionEstablished + tcpServer->errorString());
     closeAllConnections();
@@ -131,7 +131,7 @@ void Rasllo::newConnectionHandler()
     mutex.unlock();
 }
 
-void Rasllo::readFromServer()
+void Rallo::readFromServer()
 {
     if (clientConnection.empty())
     {
@@ -180,7 +180,7 @@ void Rasllo::readFromServer()
     }
 }
 
-bool Rasllo::SendMessageToServer(QString message)
+bool Rallo::SendMessageToServer(QString message)
 {
     if (clientConnection.empty())
         return false;
@@ -199,12 +199,12 @@ bool Rasllo::SendMessageToServer(QString message)
 }
 
 
-void Rasllo::clientDisconected()
+void Rallo::clientDisconected()
 {
     layout->modalWindow->CloseWindow();
     layout->ShowMessage(layout->ServerWasDisconnected);
 }
-void Rasllo::sendMessage(QString msg)
+void Rallo::sendMessage(QString msg)
 {
     SendMessageToServer("<RSO>" + msg + "</RSO>");
 }

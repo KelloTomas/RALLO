@@ -18,13 +18,13 @@
 
 
 
-class Rasllo : public QObject
+class Rallo : public QObject
 {
     Q_OBJECT
 
 public:
-    Rasllo(Config *AppConfig, QWidget *parent = 0);
-    ~Rasllo();
+    Rallo(Config *AppConfig, QWidget *parent = 0);
+    ~Rallo();
     Layout *layout;
     void Init(KeyboardHandler *keyboardCardRead);
 
@@ -47,4 +47,4 @@ private:
     void closeAllConnections();
 };
 
-#endif // RASLLO_H
+#endif // RALLO_H

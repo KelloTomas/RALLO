@@ -1,10 +1,10 @@
-#include "rasllo.h"
+#include "rallo.h"
 #include "keyboardhandler.h"
 #include "argumentparser.h"
 #include <QApplication>
 #include <QtGlobal>
 
-const QString RPI_LOGFILE_PATHPREFIX = "/home/rasllo/logs/";
+const QString RPI_LOGFILE_PATHPREFIX = "/home/rallo/logs/";
 
 void RemoveOldLogs(int NumberOfStoredLog)
 {
@@ -13,7 +13,7 @@ void RemoveOldLogs(int NumberOfStoredLog)
 #else
     QDir myDir(QDir::currentPath());
 #endif
-    myDir.setNameFilters(QStringList()<<"Rasllo-*");
+    myDir.setNameFilters(QStringList()<<"Rallo-*");
     QStringList filesList = myDir.entryList();
     for (int i = 0; i < filesList.size()-NumberOfStoredLog; ++i) {
         qDebug() << "removing old LogFile: " << filesList[i];
@@ -79,16 +79,16 @@ int main(int argc, char *argv[])
 #ifdef ForRaspberryPi
     outputFileName = RPI_LOGFILE_PATHPREFIX;
 #endif
-    outputFileName += "Rasllo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
+    outputFileName += "Rallo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
 
     QApplication a(argc, argv);
     qInstallMessageHandler(&LogHandler);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
-    Rasllo *rasllo = new Rasllo(config);
-    rasllo->Init(keyboardCardRead);
+    Rallo *rallo = new Rallo(config);
+    rallo->Init(keyboardCardRead);
 
     a.installEventFilter(keyboardCardRead);
-    QTimer::singleShot(0, rasllo, SLOT(Start()));
+    QTimer::singleShot(0, rallo, SLOT(Start()));
 
     RemoveOldLogs(config->logs);
     return a.exec();

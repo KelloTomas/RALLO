@@ -8,7 +8,7 @@ QT       += core gui network uitools serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
-TARGET = RaslloApp
+TARGET = RalloApp
 TEMPLATE = app
 
 CONFIG += c++11 static # console
@@ -27,7 +27,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        rasllo.cpp \
     argumentparser.cpp \
     beepsound.cpp \
     gpioclass.cpp \
@@ -36,7 +35,8 @@ SOURCES += \
     modalwindow.cpp \
     rfid_rc522.cpp \
     serialcardread.cpp \
-    serialporthandler.cpp
+    serialporthandler.cpp \
+    rallo.cpp
 
 HEADERS += \
     argumentparser.h \
@@ -45,17 +45,17 @@ HEADERS += \
     keyboardhandler.h \
     layout.h \
     modalwindow.h \
-    rasllo.h \
     rfid_rc522.h \
     serialcardread.h \
     serialporthandler.h \
-    config.h
+    config.h \
+    rallo.h
 
 FORMS += \
-    rasllo.ui
+    rallo.ui
 
 SUBDIRS += \
-    Rasllo.pro
+    Rallo.pro
 
 DISTFILES +=
 

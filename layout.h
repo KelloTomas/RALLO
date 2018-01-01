@@ -20,7 +20,7 @@
 #include "serialcardread.h"
 #include "keyboardhandler.h"
 #include "modalwindow.h"
-#include "ui_rasllo.h"
+#include "ui_rallo.h"
 #include "config.h"
 
 namespace Ui {

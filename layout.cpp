@@ -27,7 +27,7 @@ Layout::Layout(Config *appConfig, QWidget *parent) :
 
     if(appConfig->isEmulator)
     {
-        setWindowTitle("Rasllo -p " + QString::number(appConfig->portNumber));
+        setWindowTitle("Rallo -p " + QString::number(appConfig->portNumber));
         show();
         setFixedSize(800, 480);
     }

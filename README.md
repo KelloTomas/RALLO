@@ -1,12 +1,12 @@
-# Rasllo
+# Rallo
 
 ## Ubuntu
 ### Add/Remove user
 ```
-adduser rasllo
-usermod -aG sudo rasllo
+sudo adduser rallo
+sudo usermod -aG sudo rallo
 sudo visudo
-rasllo ALL=(ALL) NOPASSWD: ALL
+rallo ALL=(ALL) NOPASSWD: ALL
 ```
 ### Change hostname
 ```
@@ -47,8 +47,8 @@ echo "alias vnc='x11vnc -rfbauth .vnc/passwd -q -display :0 &'" | sudo tee -a ~/
 ```
 sudo nano /etc/rc.local 
 
-/home/rasllo/scripts/temp.sh &
-sudo xinit /home/rasllo/QTTcpServer :0 -- -v &
+/home/rallo/scripts/temp.sh &
+sudo xinit /home/rallo/RalloApp -p 15000 -- &
 ```
 ### Set timezone
 ```

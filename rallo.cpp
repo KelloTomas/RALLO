@@ -149,12 +149,12 @@ void Rallo::readFromServer()
 
     while (1)
     {
-        int startIndex = inputData.indexOf("<RSI");
+        int startIndex = inputData.indexOf("<RLI");
         if (startIndex == -1)
         {
             inputData.clear();
             if (layout->DebugWarnings)
-                qWarning() << "No START tag <RSI>";
+                qWarning() << "No START tag <RLI>";
             break;
         }
         else if (startIndex > 0)
@@ -164,8 +164,8 @@ void Rallo::readFromServer()
             inputData = inputData.remove(0,startIndex);
         }
 
-        // ak sprava neobsahuje koncovy TAG /RSI
-        int endIndex = inputData.indexOf("</RSI>");
+        // ak sprava neobsahuje koncovy TAG /RLI
+        int endIndex = inputData.indexOf("</RLI>");
         if (endIndex == -1)
             break;
 
@@ -206,5 +206,5 @@ void Rallo::clientDisconected()
 }
 void Rallo::sendMessage(QString msg)
 {
-    SendMessageToServer("<RSO>" + msg + "</RSO>");
+    SendMessageToServer("<RLO>" + msg + "</RLO>");
 }

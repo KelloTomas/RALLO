@@ -498,7 +498,7 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
 {
     while (xml->readNextStartElement())
     {
-        if (xml->name() == "RSI")
+        if (xml->name() == "RLI")
         {
                         while (xml->readNextStartElement())
                         {
@@ -565,8 +565,8 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
         else
         {
             if (DebugWarnings)
-                qWarning() << "RSI start tag is missing, founded: " + xml->name().toString();
-            emitError("RSI start tag is missing, founded: " + xml->name().toString());
+                qWarning() << "RLI start tag is missing, founded: " + xml->name().toString();
+            emitError("RLI start tag is missing, founded: " + xml->name().toString());
         }
     }
 }

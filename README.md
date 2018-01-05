@@ -63,3 +63,19 @@ sudo minicom -s
  - Serial device /dev/serial0
  - 9600 8N1
  - CLOSE: CTRL+A, X
+ 
+
+## Export exe z QT
+
+```
+
+run:
+Qt 5.7 64-bit for Desktop (MSVC 2015)
+
+Usage: windeployqt.exe [options] [files]
+
+cd C:\projekty\QtDeviceServerTrunk\build-Rallo-Desktop_Qt_5_7_0_MSVC2015_64bit-Release\release
+windeployqt.exe --quick .
+COPY /-Y RalloApp.exe "..\..\..\ctecky\Trunk\Src\Emulators\QtEmulator\QTTcpServer.exe"
+
+```

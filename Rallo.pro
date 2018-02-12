@@ -62,5 +62,5 @@ DISTFILES +=
 RESOURCES += \
     resources/resources.qrc
 
-DEFINES += new18.1
+DEFINES += new181
 #DEFINES += ForRaspberryPi

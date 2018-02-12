@@ -15,7 +15,7 @@ void ModalWindow::SetWindowAsModal(QMainWindow *window)
             qApp->desktop()->availableGeometry()
         )
     );
-#ifdef new18.1
+#ifdef new181
     window->setWindowFlags(Qt::FramelessWindowHint);
     window->statusBar()->setSizeGripEnabled(false);
     window->setWindowModality(Qt::ApplicationModal);

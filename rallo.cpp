@@ -43,7 +43,7 @@ void Rallo::Init(KeyboardHandler *keyboardCardRead)
     connect(keyboardCardRead, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
 
 #ifdef ForRaspberryPi
-    #ifdef new18.1
+    #ifdef new181
         connect(layout->serialCard, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
         layout->serialCard->StartReading();
     #endif

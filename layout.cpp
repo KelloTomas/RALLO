@@ -51,7 +51,7 @@ void Layout::Init()
     connect(CurrTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
     connect(IPUpdateTimer, SIGNAL(timeout()), this, SLOT(UpdateIpAddressOnLayout()));
 
-#if defined(ForRaspberryPi) && defined (new18.1)
+#if defined(ForRaspberryPi) && defined (new181)
     // RFID proxy ctecka
     serialCard = new SerialCardRead;
 #endif

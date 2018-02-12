@@ -6,7 +6,6 @@ ModalWindow::ModalWindow()
 void ModalWindow::SetWindowAsModal(QMainWindow *window)
 {
     window->setFixedSize(500, 300);
-  //window->setStyleSheet("QMainWindow {background:rgb(114, 102, 186); border: 2px solid white;}");
     window->setStyleSheet("QMainWindow {background:white; border: 2px solid black;}");
     window->setGeometry(
         QStyle::alignedRect(
@@ -16,9 +15,13 @@ void ModalWindow::SetWindowAsModal(QMainWindow *window)
             qApp->desktop()->availableGeometry()
         )
     );
+#ifdef new18.1
     window->setWindowFlags(Qt::FramelessWindowHint);
     window->statusBar()->setSizeGripEnabled(false);
     window->setWindowModality(Qt::ApplicationModal);
+#else
+    window->setWindowFlags(Qt::Dialog);
+#endif
 }
 
 

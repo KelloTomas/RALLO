@@ -41,12 +41,12 @@ void Rallo::Init(KeyboardHandler *keyboardCardRead)
     connect(layout, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
     connect(layout->modalWindow, SIGNAL(MessageToSend(QString)), this, SLOT(sendMessage(QString)));
     connect(keyboardCardRead, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
-    layout->Init();
-#ifdef SerialCardReader
-    connect(layout->serialCard, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
-    layout->serialCard->StartReading();
-#endif
+
 #ifdef ForRaspberryPi
+    #ifdef new18.1
+        connect(layout->serialCard, SIGNAL(CardReaded(QString)), this, SLOT(sendMessage(QString)));
+        layout->serialCard->StartReading();
+    #endif
     QProcess proc;
     proc.start("xset s off");
     proc.waitForFinished();
@@ -55,6 +55,8 @@ void Rallo::Init(KeyboardHandler *keyboardCardRead)
     proc.start("xset s noblank");
     proc.waitForFinished();
 #endif
+
+    layout->Init();
 }
 
 void Rallo::Start()

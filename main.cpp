@@ -20,7 +20,7 @@ void RemoveOldLogs(int NumberOfStoredLog)
         myDir.remove(filesList[i]);
     }
 }
-QString outputFileName = "";
+QString outputFileName;
 
 void LogHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
@@ -73,9 +73,11 @@ int main(int argc, char *argv[])
     // 17.09.19"; // pre Windows prehrava zvuky beep.vaw a error.vaw
     // 17.11.23"; // Implementacia Modalneho okna
     // 17.12.25"; // New: not acknowledge to messages RPO->RLO
-    config->programVersion = "17.12.27"; // New: SerialRead, location of LOGs in RPI
+    // 17.12.27"; // New: SerialRead, location of LOGs in RPI
+    config->programVersion = "18.01.29"; // New: Build for Windows
     if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
+    outputFileName = "";
 #ifdef ForRaspberryPi
     outputFileName = RPI_LOGFILE_PATHPREFIX;
 #endif

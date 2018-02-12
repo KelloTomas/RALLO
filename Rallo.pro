@@ -62,4 +62,5 @@ DISTFILES +=
 RESOURCES += \
     resources/resources.qrc
 
-DEFINES += SerialCardReader
+DEFINES += new18.1
+#DEFINES += ForRaspberryPi

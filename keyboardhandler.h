@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include <iostream>
+#include <QDateTime>
 
 class KeyboardHandler: public QObject
 {

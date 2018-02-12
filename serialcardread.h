@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QSerialPort>
+#include <QDateTime>
 
 class SerialCardRead : public QObject
 {

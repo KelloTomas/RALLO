@@ -46,7 +46,8 @@ void SerialCardRead::handleReadyRead()
     {
         qDebug() << "CardRead received STOP  symbol, card number: " << cardNumber;
         isReading = false;
-        emit CardReaded(cardNumber);
+        emit CardReaded("<CardRead TimeStamp=\"" + QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss") + "\" Number=\"" + cardNumber + "\"/>");
+        //emit CardReaded(cardNumber);
         cardNumber.clear();
     }
     else if (isReading)

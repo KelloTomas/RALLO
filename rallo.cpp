@@ -62,7 +62,6 @@ void Rallo::Start()
 {
     qDebug() << "Rallo starting TCP server, version: " << AppConfig->programVersion;
 
-
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
         // Get saved network configuration

@@ -288,7 +288,7 @@
         </font>
        </property>
        <property name="text">
-        <string>2017 open source</string>
+        <string>2018 open source</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>

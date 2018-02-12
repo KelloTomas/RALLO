@@ -12,6 +12,7 @@ win32 {
     greaterThan(QT_MAJOR_VERSION, 4): QT += multimedia
 } else {
     DEFINES += ForRaspberryPi
+    #DEFINES += UseAbsoluteLocation
 }
 
 TARGET = RalloApp

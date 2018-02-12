@@ -9,17 +9,17 @@ SerialPortHandler::SerialPortHandler(QObject *parent)
 {
     isReading = false;
 
-    serialPort.setPortName("/dev/ttyS0");
+    serialPort.setPortName("/dev/ttyAMA0");
     serialPort.setBaudRate(QSerialPort::Baud9600);
     serialPort.setDataBits(QSerialPort::Data8);
     serialPort.setParity(QSerialPort::NoParity);
     serialPort.setStopBits(QSerialPort::OneStop);
     if (!serialPort.open(QIODevice::ReadOnly)) {
-            qDebug() << QObject::tr("Failed to open port /dev/ttyS0, error: %2").arg(serialPort.errorString()) << endl;
+            qDebug() << QObject::tr("Failed to open port /dev/ttyAMA0, error: %2").arg(serialPort.errorString()) << endl;
     }
     else
     {
-        qDebug() << "zacalo odposluchat na serial porte";
+        qDebug() << "zacalo odposluchat na serial porte ttyAMA0";
     }
     connect(&serialPort, &QSerialPort::readyRead, this, &SerialPortHandler::handleReadyRead);
     connect(&serialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),

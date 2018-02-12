@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     // 18.01.29"; // New: Build for Windows
     config->programVersion = "18.02.12"; // New: PRO file specified for Windows/Linux
     outputFileName = "";
-#ifdef ForRaspberryPi
+#ifdef UseAbsoluteLocation
     outputFileName = RPI_LOGFILE_PATHPREFIX;
 #endif
     outputFileName += "Rallo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";

@@ -63,4 +63,4 @@ RESOURCES += \
     resources/resources.qrc
 
 DEFINES += new181
-#DEFINES += ForRaspberryPi
+DEFINES += ForRaspberryPi

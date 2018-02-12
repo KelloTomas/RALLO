@@ -38,7 +38,7 @@ public:
     void Init();
     void ParseXmlData(QXmlStreamReader *xml);
     void StopTimers();
-#ifdef SerialCardReader
+#if defined(ForRaspberryPi) && defined (new181)
     // RFID proxy ctecka
     SerialCardRead *serialCard;
 #endif

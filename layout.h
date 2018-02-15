@@ -38,10 +38,8 @@ public:
     void Init();
     void ParseXmlData(QXmlStreamReader *xml);
     void StopTimers();
-#if defined(ForRaspberryPi) && defined (new181)
     // RFID proxy ctecka
-    SerialCardRead *serialCard;
-#endif
+    //SerialCardRead *serialCard;
 
 #ifdef QT_DEBUG
     const bool Debug = false;

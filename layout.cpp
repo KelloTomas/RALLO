@@ -51,16 +51,11 @@ void Layout::Init()
     connect(CurrTimeTimer, SIGNAL(timeout()), this, SLOT(UpdateTime()));
     connect(IPUpdateTimer, SIGNAL(timeout()), this, SLOT(UpdateIpAddressOnLayout()));
 
-#if defined(ForRaspberryPi) && defined (new181)
     // RFID proxy ctecka
-    serialCard = new SerialCardRead;
-#endif
+    //serialCard = new SerialCardRead;
 
-#ifdef RFIDctecka // Zatazuje CPU na 50%
     // RFID kodovana MiFare ctecka
-    RFID_RC522 *rfid = new RFID_RC522();
-#endif
-
+    //RFID_RC522 *rfid = new RFID_RC522();
 }
 
 void Layout::SetTextsOnLayout(QString message)
@@ -680,19 +675,20 @@ bool Layout::EditQObjectAtribute(QString id, QString attribute, QString newValue
         qWarning() << "object " << id << " was not find";
         return false;
     }
-
+/*
+ * Zmena triedy pre nastavenie dizajnu sa nepouziva
     if (attribute == "class")
     {
         //if (typeid(*object) == typeid(QWidget))
         //{
-        object->setProperty("class", newValue);
-        /*}
-        else
-        {
-            qWarning() << "cant set class property to " << id << ", is not QWidget type";
-        }*/
+            object->setProperty("class", newValue);
+        //}
+        //else
+        //{
+        //    qWarning() << "cant set class property to " << id << ", is not QWidget type";
+        //}
     }
-
+*/
     if(typeid(*object) == typeid(QLabel))
     {
         if (attribute == "pixmap")

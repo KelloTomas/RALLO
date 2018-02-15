@@ -42,7 +42,6 @@ SOURCES += \
     modalwindow.cpp \
     rfid_rc522.cpp \
     serialcardread.cpp \
-    serialporthandler.cpp \
     rallo.cpp
 
 HEADERS += \
@@ -54,7 +53,6 @@ HEADERS += \
     modalwindow.h \
     rfid_rc522.h \
     serialcardread.h \
-    serialporthandler.h \
     config.h \
     rallo.h
 

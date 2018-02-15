@@ -1,3 +1,4 @@
+/*
 #include "serialcardread.h"
 
 SerialCardRead::SerialCardRead(QObject *parent) : QObject(parent)
@@ -59,4 +60,4 @@ void SerialCardRead::handleReadyRead()
         qDebug() << "CardRead (without start symbol) received symbol: " << data[0];
     }
 }
-
+*/

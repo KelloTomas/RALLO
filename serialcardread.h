@@ -1,5 +1,6 @@
 #ifndef SERIALCARDREAD_H
 #define SERIALCARDREAD_H
+/*
 
 #include <QDebug>
 #include <QObject>
@@ -26,4 +27,5 @@ private:
     bool isReading;
 };
 
+*/
 #endif // SERIALCARDREAD_H

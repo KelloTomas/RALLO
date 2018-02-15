@@ -82,13 +82,13 @@ void Layout::SetTimersForTime()
 {
     UpdateTime();
     UpdateIpAddressOnLayout();
-    CurrTimeTimer->start(1000); // kazdu sekundu
-    IPUpdateTimer->start(60*1000); // raz za minutu
+    CurrTimeTimer->start(1000); // every second
+    IPUpdateTimer->start(60*1000); // every minute
 }
 
 void Layout::ShowMessage(QString message)
 {
-    qDebug() << "ShowMessage - INIT obrazovka so spravou: " << message;
+    qDebug() << "INIT screen with message: " << message;
     ShowLayout(initLayoutName);
     SetTextsOnLayout(message);
     SetTimersForTime();

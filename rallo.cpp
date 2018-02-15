@@ -59,7 +59,6 @@ void Rallo::Init(KeyboardHandler *keyboardCardRead)
 
 void Rallo::Start()
 {
-    qDebug() << "Rallo starting TCP server, version: " << AppConfig->programVersion;
 
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
@@ -85,6 +84,7 @@ void Rallo::Start()
         sessionOpened();
     }
     QObject::connect(tcpServer, &QTcpServer::newConnection, this, &Rallo::newConnectionHandler);
+    qDebug() << "Started listening on TCP port: " << AppConfig->portNumber;
 }
 
 void Rallo::sessionOpened()

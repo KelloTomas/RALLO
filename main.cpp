@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QtGlobal>
 
-const QString RPI_LOGFILE_PATHPREFIX = "/home/rallo/logs/";
+const QString RPI_LOGFILE_PATHPREFIX = "logs/";
 QString outputFileName;
 
 void RemoveOldLogs(int NumberOfStoredLog)
@@ -17,7 +17,7 @@ void RemoveOldLogs(int NumberOfStoredLog)
     myDir.setNameFilters(QStringList()<<"Rallo-*");
     QStringList filesList = myDir.entryList();
     for (int i = 0; i < filesList.size()-NumberOfStoredLog; ++i) {
-        qDebug() << "removing old LogFile: " << filesList[i];
+        qDebug() << "Removing old LogFile: " << filesList[i];
         myDir.remove(filesList[i]);
     }
 }
@@ -76,20 +76,22 @@ int main(int argc, char *argv[])
     // 17.12.25"; // New: not acknowledge to messages RPO->RLO
     // 17.12.27"; // New: SerialRead, location of LOGs in RPI
     // 18.01.29"; // New: Build for Windows
-    config->programVersion = "18.02.12"; // New: PRO file specified for Windows/Linux
+    //"18.02.12"; // New: PRO file specified for Windows/Linux + UART Serial card reader
+    config->programVersion = "18.02.16"; // Disabled UART card reader, init messages modified, log files relative path
     outputFileName = "";
 #ifdef UseAbsoluteLocation
     outputFileName = RPI_LOGFILE_PATHPREFIX;
 #endif
     outputFileName += "Rallo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
     qInstallMessageHandler(LogHandler);
-
+    qDebug() << "RalloApp is starting - version: " << config->programVersion.toStdString().c_str();
     if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
     QApplication a(argc, argv);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
     Rallo *rallo = new Rallo(config);
     rallo->Init(keyboardCardRead);
+    qDebug() << "Initialized";
     a.installEventFilter(keyboardCardRead);
     QTimer::singleShot(0, rallo, SLOT(Start()));
     RemoveOldLogs(config->logs);

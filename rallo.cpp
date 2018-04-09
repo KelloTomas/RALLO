@@ -20,7 +20,7 @@ void Rallo::closeAllConnections()
 
 Rallo::~Rallo()
 {
-    qDebug() << "Rallo sa VYPINA................";
+    qDebug() << "App is closing................";
     if (layout != nullptr)
         delete layout;
     if (networkSession != nullptr)

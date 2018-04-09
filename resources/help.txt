@@ -1,10 +1,11 @@
 
 
-C++ program na zobrazovanie informacii primanych zo servera.
+C++ program to show xml layouts received over TCP/IP connection
 
+usage:
+universal information display
 
-spustenie:
-./Rallo
+parametre:
 -h : this help
 -v : show version of program
 -e : emulator version (run in window insted of FullScreen)
@@ -13,3 +14,5 @@ spustenie:
 -l : number of stored log files (one file == one day) [default 10]
 
 Tomas Kello
+kello.tomas@gmail.com
++421 948 029 936

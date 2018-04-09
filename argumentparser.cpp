@@ -9,7 +9,7 @@ ArgumentParser::ArgumentParser()
 
 bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
 {
-        for (int i = 1; i < argc; i++) // prvy argument je nazov programu
+        for (int i = 1; i < argc; i++) // first argument is program name
         {
             if (!strcmp(argv[i], "-h"))
             {
@@ -51,7 +51,7 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
             }
             else if (!strcmp(argv[i], "-v"))
             {
-                qDebug() << "Verzia programu: " << config->programVersion;
+                qDebug() << "Program version: " << config->programVersion;
                 return false;
             }
             else if (!strcmp(argv[i], "-e"))

@@ -1,20 +1,21 @@
 #include "rallo.h"
 #include "keyboardhandler.h"
 #include "argumentparser.h"
+#include <iostream>
 #include <QApplication>
 #include <QtGlobal>
-
-const QString RPI_LOGFILE_PATHPREFIX = "logs/";
+using namespace std;
+#ifdef ForRaspberryPi
+const QString LOG_FOLDER = "/home/r/logs";
+#else
+const QString LOG_FOLDER = "logs";
+#endif
 QString outputFileName;
 
 void RemoveOldLogs(int NumberOfStoredLog)
 {
-#ifdef ForRaspberryPi
-    QDir myDir(RPI_LOGFILE_PATHPREFIX);
-#else
-    QDir myDir(QDir::currentPath());
-#endif
-    myDir.setNameFilters(QStringList()<<"Rallo-*");
+    QDir myDir(LOG_FOLDER);
+    myDir.setNameFilters(QStringList()<<"AppLog-*");
     QStringList filesList = myDir.entryList();
     for (int i = 0; i < filesList.size()-NumberOfStoredLog; ++i) {
         qDebug() << "Removing old LogFile: " << filesList[i];
@@ -27,30 +28,31 @@ void LogHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
     QString txt;
     switch (type) {
     case QtDebugMsg: // qDebug()
-        txt = QString("Debug %1: %2").arg(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss")).arg(msg);
-        qDebug() << txt;
+        txt = "Debug ";
         break;
     case QtWarningMsg: // qWarning()
-        txt = QString("Warni %1: %2").arg(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss")).arg(msg);
-        qWarning() << txt;
+        txt = "Warni ";
         break;
     case QtCriticalMsg: // qCritical()
-        txt = QString("Criti %1: %2").arg(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss")).arg(msg);
-        qCritical() << msg;
+        txt = "Criti ";
         break;
     case QtFatalMsg: // qFatal()
-        txt = QString("Fatal %1: %2").arg(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss")).arg(msg);
-        qFatal(txt.toStdString().c_str());
-        abort();
+        txt = "Fatal ";
+        break;
     default:
-        txt = QString("Unknow%1: %2").arg(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss")).arg(msg);
-        qDebug() << msg;
+        txt = "Unknow";
         break;
     }
+    txt.append(QDateTime::currentDateTime().toString("yy-MM-dd hh:mm:ss: ")).append(msg).append("\r\n");
+    string outTxt = txt.toStdString();
+    cout << outTxt;
     QFile outFile(outputFileName);
     outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&outFile);
-    ts << txt << endl;
+    outFile.write(outTxt.c_str());
+    if (type == QtFatalMsg)
+    {
+        abort();
+    }
     return;
 }
 
@@ -77,21 +79,25 @@ int main(int argc, char *argv[])
     // 17.12.27"; // New: SerialRead, location of LOGs in RPI
     // 18.01.29"; // New: Build for Windows
     //"18.02.12"; // New: PRO file specified for Windows/Linux + UART Serial card reader
-    config->programVersion = "18.02.16"; // Disabled UART card reader, init messages modified, log files relative path
-    outputFileName = "";
-#ifdef UseAbsoluteLocation
-    outputFileName = RPI_LOGFILE_PATHPREFIX;
-#endif
-    outputFileName += "Rallo-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
+    //"18.02.16"; // Disabled UART card reader, init messages modified, log files relative path
+    //"18.03.28"; // fixed messages
+    config->programVersion = "18.04.09"; // logs to folder "logs", new string builder of logs
+
     qInstallMessageHandler(LogHandler);
-    qDebug() << "RalloApp is starting - version: " << config->programVersion.toStdString().c_str();
     if(!ArgumentParser::Parse(argc, argv, config))
         return 0;
+    outputFileName = LOG_FOLDER + "/AppLog-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
+    if (!QDir(LOG_FOLDER).exists())
+    {
+        QDir().mkdir(LOG_FOLDER);
+        qDebug() << "Created folder: " << LOG_FOLDER;
+    }
+    qDebug() << "App is starting on port " << config->portNumber << " - version: " << config->programVersion.toStdString().c_str();
     QApplication a(argc, argv);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
     Rallo *rallo = new Rallo(config);
     rallo->Init(keyboardCardRead);
-    qDebug() << "Initialized";
+    qDebug() << "Initialization finished";
     a.installEventFilter(keyboardCardRead);
     QTimer::singleShot(0, rallo, SLOT(Start()));
     RemoveOldLogs(config->logs);

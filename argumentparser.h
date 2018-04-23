@@ -7,7 +7,7 @@
 {
 public:
      ArgumentParser();
-     static bool Parse(int argc, char *argv[], Config *config);
+     static void Parse(int argc, char *argv[], Config *config);
 };
 
 #endif // ARGUMENTPARSER_H

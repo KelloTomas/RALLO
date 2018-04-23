@@ -49,6 +49,7 @@ void LogHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
     QFile outFile(outputFileName);
     outFile.open(QIODevice::WriteOnly | QIODevice::Append);
     outFile.write(outTxt.c_str());
+    outFile.close();
     if (type == QtFatalMsg)
     {
         abort();
@@ -81,17 +82,21 @@ int main(int argc, char *argv[])
     //"18.02.12"; // New: PRO file specified for Windows/Linux + UART Serial card reader
     //"18.02.16"; // Disabled UART card reader, init messages modified, log files relative path
     //"18.03.28"; // fixed messages
-    config->programVersion = "18.04.09"; // logs to folder "logs", new string builder of logs
+    //"18.04.09"; // logs to folder "logs", new string builder of logs
+    config->programVersion = "new"; // exit codes in argument parser
 
-    qInstallMessageHandler(LogHandler);
-    if(!ArgumentParser::Parse(argc, argv, config))
-        return 0;
-    outputFileName = LOG_FOLDER + "/AppLog-"+QDate::currentDate().toString("yyyy-MM-dd")+"-p"+QString::number(config->portNumber)+".log";
+    // filename for output from argumentparser
+    outputFileName = LOG_FOLDER + "/AppLog-"+QDate::currentDate().toString("yyyy-MM-dd")+".log";
+    qInstallMessageHandler(LogHandler); // first to redirect all messages
     if (!QDir(LOG_FOLDER).exists())
     {
-        QDir().mkdir(LOG_FOLDER);
+        QDir().mkdir(LOG_FOLDER); // first create folder, then write to it
         qDebug() << "Created folder: " << LOG_FOLDER;
     }
+    ArgumentParser::Parse(argc, argv, config);
+
+    // reset filename with portnumber
+    outputFileName = LOG_FOLDER + "/AppLog-" + QDate::currentDate().toString("yyyy-MM-dd") + "-p" + QString::number(config->portNumber) + ".log";
     qDebug() << "App is starting on port " << config->portNumber << " - version: " << config->programVersion.toStdString().c_str();
     QApplication a(argc, argv);
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;

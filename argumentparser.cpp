@@ -7,7 +7,7 @@ ArgumentParser::ArgumentParser()
 {
 }
 
-bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
+void ArgumentParser::Parse(int argc, char *argv[], Config* config)
 {
         for (int i = 1; i < argc; i++) // first argument is program name
         {
@@ -17,13 +17,9 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
                 if (f.open(QFile::ReadOnly))
                 {
                     QTextStream in(&f);
-#ifdef ForRaspberryPi
                     qDebug() << in.readAll();
-#else
-                    qDebug().noquote() << in.readAll();
-#endif
                 }
-                return false;
+                exit(0);
             }
             else if (!strcmp(argv[i], "-p"))
             {
@@ -34,7 +30,7 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
                 else
                 {
                     qWarning() << "Port number is missing after argument -p";
-                    return false;
+                    exit(1);
                 }
             }
             else if (!strcmp(argv[i], "-d"))
@@ -46,13 +42,13 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
                 else
                 {
                     qWarning() << "Display number is missing after argument -v";
-                    return false;
+                    exit(1);
                 }
             }
             else if (!strcmp(argv[i], "-v"))
             {
                 qDebug() << "Program version: " << config->programVersion;
-                return false;
+                exit(0);
             }
             else if (!strcmp(argv[i], "-e"))
             {
@@ -67,7 +63,7 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
                 else
                 {
                     qWarning() << "Number of stored logs is missing after argument -l";
-                    return false;
+                    exit(1);
                 }
             }
             else
@@ -75,5 +71,5 @@ bool ArgumentParser::Parse(int argc, char *argv[], Config* config)
                 qWarning() << "Unknown argument: " << argv[i];
             }
         }
-        return true;
+        return;
 }

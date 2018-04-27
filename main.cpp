@@ -6,7 +6,7 @@
 #include <QtGlobal>
 using namespace std;
 #ifdef ForRaspberryPi
-const QString LOG_FOLDER = "/home/r/logs";
+const QString LOG_FOLDER = "/home/pi/logs";
 #else
 const QString LOG_FOLDER = "logs";
 #endif

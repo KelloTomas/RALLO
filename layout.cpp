@@ -553,24 +553,17 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                             {
                                 qDebug() << "Saving picture";
 
+                                QString picturePath = "";
+                                QString pictureName = "";
                                 foreach (const QXmlStreamAttribute &storeAttr, xml->attributes())
                                 {
-                                    if (storeAttr.name() == "Id")
+                                    if (storeAttr.name() == "Path")
                                     {
-                                        QString pictureData = xml->readElementText();
-                                        QString pictureName= storeAttr.value().toString();
-                                        qDebug() << "SavePicture - ukladam obrazok: " << pictureName;
-
-
-                                        QFile file(pictureName.toUtf8().constData());
-                                        file.open(QIODevice::WriteOnly);
-                                        QByteArray array = QByteArray::fromHex(pictureData.toLatin1());
-                                        file.write(array);
-                                        file.close();
-                                        //OutFile.write(pictureData.toUtf8().constData(), pictureData.length());
-                                        //OutFile.write(array);
-                                        //OutFile.close();
-                                        qDebug() << "SavePicture - Obrazok ulozeny";
+                                        picturePath = storeAttr.value().toString();
+                                    }
+                                    else if (storeAttr.name() == "Name")
+                                    {
+                                        pictureName= storeAttr.value().toString();
                                     }
                                     else
                                     {
@@ -578,7 +571,26 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                                             qWarning() << "SavePicture - Unknow attribute: " << storeAttr.name();
                                     }
                                 }
-
+                                if (pictureName.isEmpty())
+                                {
+                                    if (DebugWarnings)
+                                        qWarning() << "SavePicture - picture name is missing";
+                                }
+                                else
+                                {
+                                    QString pictureData = xml->readElementText();
+                                    qDebug() << "SavePicture - path: " << picturePath << " name: " << pictureName;
+                                    QDir dir(picturePath);
+                                    if (!dir.exists()){
+                                        qDebug() << "Creating folder path: " << picturePath;
+                                        dir.mkpath(".");
+                                    }
+                                    QFile file(picturePath + "/" + pictureName.toUtf8().constData());
+                                    file.open(QIODevice::WriteOnly);
+                                    file.write(QByteArray::fromHex(pictureData.toLatin1()));
+                                    file.close();
+                                    qDebug() << "SavePicture - Successfull";
+                                }
                                 xml->skipCurrentElement();
                             }
                             else

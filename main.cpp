@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     //"18.02.16"; // Disabled UART card reader, init messages modified, log files relative path
     //"18.03.28"; // fixed messages
     //"18.04.09"; // logs to folder "logs", new string builder of logs
-    config->programVersion = "new"; // exit codes in argument parser
+    config->programVersion = "18.05.14"; // exit codes in argument parser, log if new server trying to connect while I am connected
 
     // filename for output from argumentparser
     outputFileName = LOG_FOLDER + "/AppLog-"+QDate::currentDate().toString("yyyy-MM-dd")+".log";
@@ -97,13 +97,13 @@ int main(int argc, char *argv[])
 
     // reset filename with portnumber
     outputFileName = LOG_FOLDER + "/AppLog-" + QDate::currentDate().toString("yyyy-MM-dd") + "-p" + QString::number(config->portNumber) + ".log";
-    qDebug() << "App is starting on port " << config->portNumber << " - version: " << config->programVersion.toStdString().c_str();
     QApplication a(argc, argv);
+    qDebug() << "App is starting on port " << config->portNumber << " - version: " << config->programVersion.toStdString().c_str() << ", style: " << QApplication::style();
     KeyboardHandler *keyboardCardRead = new KeyboardHandler;
     Rallo *rallo = new Rallo(config);
     rallo->Init(keyboardCardRead);
-    qDebug() << "Initialization finished";
     a.installEventFilter(keyboardCardRead);
+    qDebug() << "Initialization finished";
     QTimer::singleShot(0, rallo, SLOT(Start()));
     RemoveOldLogs(config->logs);
     return a.exec();

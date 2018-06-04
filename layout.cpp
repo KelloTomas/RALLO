@@ -1,4 +1,5 @@
 #include "layout.h"
+#include <fstream>
 
 Layout::~Layout()
 {
@@ -546,6 +547,38 @@ void Layout::ParseXmlData(QXmlStreamReader *xml)
                             else if (xml->name() == "ModalClose")
                             {
                                 modalWindow->CloseWindow();
+                                xml->skipCurrentElement();
+                            }
+                            else if (xml->name() == "StorePicture")
+                            {
+                                qDebug() << "Saving picture";
+
+                                foreach (const QXmlStreamAttribute &storeAttr, xml->attributes())
+                                {
+                                    if (storeAttr.name() == "Id")
+                                    {
+                                        QString pictureData = xml->readElementText();
+                                        QString pictureName= storeAttr.value().toString();
+                                        qDebug() << "SavePicture - ukladam obrazok: " << pictureName;
+
+
+                                        QFile file(pictureName.toUtf8().constData());
+                                        file.open(QIODevice::WriteOnly);
+                                        QByteArray array = QByteArray::fromHex(pictureData.toLatin1());
+                                        file.write(array);
+                                        file.close();
+                                        //OutFile.write(pictureData.toUtf8().constData(), pictureData.length());
+                                        //OutFile.write(array);
+                                        //OutFile.close();
+                                        qDebug() << "SavePicture - Obrazok ulozeny";
+                                    }
+                                    else
+                                    {
+                                        if (DebugWarnings)
+                                            qWarning() << "SavePicture - Unknow attribute: " << storeAttr.name();
+                                    }
+                                }
+
                                 xml->skipCurrentElement();
                             }
                             else

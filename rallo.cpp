@@ -118,6 +118,10 @@ void Rallo::sessionOpened()
 void Rallo::newConnectionHandler()
 {
     layout->ShowMessage(layout->NewConnectionEstablished + tcpServer->errorString());
+    if (clientConnection.size() != 0)
+    {
+        qWarning() << "New connection request, while I am connected to another server -> Closing current connection";
+    }
     closeAllConnections();
     layout->StopTimers();
     inputData.clear();

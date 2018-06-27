@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">background:white;</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="4,8,0">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="4,6,1">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -30,7 +30,7 @@
     <number>10</number>
    </property>
    <property name="bottomMargin">
-    <number>10</number>
+    <number>5</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3,1">
@@ -273,11 +273,14 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,0,2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,0">
+     <property name="verticalSpacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
       <widget class="QLabel" name="label_4">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -295,23 +298,10 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="autor">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color:white</string>
-       </property>
-       <property name="text">
-        <string>Autor: Tomas Kello</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="0" column="1">
       <widget class="QLabel" name="label_3">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -326,6 +316,24 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="text">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Autor: Tomas Kello</string>
        </property>
       </widget>
      </item>

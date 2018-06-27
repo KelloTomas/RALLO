@@ -74,8 +74,10 @@ void Layout::SetTextsOnLayout(QString message)
     }
     EditQObjectAtribute("VersionNumber", "text", VerziaTitle + AppConfig->programVersion);
     EditQObjectAtribute("TimeLast", "text", QDateTime::currentDateTime().toString("hh:mm:ss"));
-    if (QDateTime::currentDateTime() < QDateTime::fromString("2019", "yyyy"))
-        EditQObjectAtribute("autor", "text", " ");
+#if ForRaspberryPi
+    if (QDateTime::currentDateTime() > QDateTime::fromString("2019-06", "yyyy-MM"))
+        EditQObjectAtribute("gridLayout_2", "rowstretch", "1,1");
+#endif
     EditQObjectAtribute("logo", "pixmap", ":/logo.png");
 }
 

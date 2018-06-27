@@ -84,7 +84,8 @@ int main(int argc, char *argv[])
     //"18.03.28"; // fixed messages
     //"18.04.09"; // logs to folder "logs", new string builder of logs
     //"18.05.14"; // exit codes in argument parser, log if new server trying to connect while I am connected
-    config->programVersion = "18.06.04"; // Save pictures
+    //"18.06.04"; // Save pictures
+    config->programVersion = "18.06.16";
 
     // filename for output from argumentparser
     outputFileName = LOG_FOLDER + "/AppLog-"+QDate::currentDate().toString("yyyy-MM-dd")+".log";

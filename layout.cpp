@@ -214,12 +214,16 @@ void Layout::xmlMessageFunction(QXmlStreamReader *xml)
     {
         if (DebugFunction)
             qDebug() << "Message - title: " << title << " msg: " << msg;
-        QMessageBox *msgBox = new QMessageBox( this );
+        QMessageBox *msgBox = new QMessageBox( QMessageBox::NoIcon,
+                                               title,
+                                               msg,
+                                               QMessageBox::Ok,
+                                               this,
+                                               Qt::FramelessWindowHint | Qt::Dialog );
         msgBox->setAttribute( Qt::WA_DeleteOnClose ); //makes sure the msgbox is deleted automatically when closed
-        msgBox->setStandardButtons( QMessageBox::Ok );
-        msgBox->setWindowTitle( title );
-        msgBox->setText( msg );
-        msgBox->setModal( true ); // if you want it modal
+        msgBox->setStyleSheet("QMessageBox {background-color: #000000;}"
+                          "QMessageBox QLabel {color: #FFFFFF; font-size:20px;}"
+                          "QMessageBox QPushButton {border: 2px solid #0000FF; border-radius:5px; font-size:40px; color:#FF0000; background-color: #FF00FF;}");
         msgBox->open();
     }
 }

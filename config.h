@@ -7,7 +7,7 @@ public:
     int displayID = 0;
     int logs = 10;
     int portNumber = 15000;
-    bool isEmulator = false;
+    QString isEmulator;
     QString programVersion;
 };
 #endif // CONFIG_H

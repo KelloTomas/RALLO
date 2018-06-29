@@ -52,7 +52,17 @@ void ArgumentParser::Parse(int argc, char *argv[], Config* config)
             }
             else if (!strcmp(argv[i], "-e"))
             {
-                config->isEmulator = true;
+                if (argc > i+1)
+                {
+                    if (argv[i+1][0] != '-')
+                        config->isEmulator = argv[++i];
+                    else
+                        config->isEmulator = "800x480";
+                }
+                else
+                {
+                    config->isEmulator = "800x480";
+                }
             }
             else if (!strcmp(argv[i], "-l"))
             {

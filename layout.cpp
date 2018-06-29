@@ -26,13 +26,7 @@ Layout::Layout(Config *appConfig, QWidget *parent) :
     ui->mainToolBar->hide();
     ui->centralWidget->setContentsMargins(0,0,0,0);
 
-    if(appConfig->isEmulator)
-    {
-        setWindowTitle("Rallo -p " + QString::number(appConfig->portNumber));
-        show();
-        setFixedSize(800, 480);
-    }
-    else
+    if(appConfig->isEmulator.isNull())
     {
         // if I set geometry, app window doesn't have border with close button
         QDesktopWidget *desktop = new QDesktopWidget();
@@ -42,6 +36,14 @@ Layout::Layout(Config *appConfig, QWidget *parent) :
             qWarning() << "displayID is greater than number of displays";
         showFullScreen();
         QApplication::setOverrideCursor(Qt::BlankCursor);
+    }
+    else
+    {
+        setWindowTitle("Rallo -p " + QString::number(appConfig->portNumber));
+        show();
+        QStringList parts = appConfig->isEmulator.split("x");
+        setFixedSize(((QString)parts.at(0)).toInt(), ((QString)parts.at(1)).toInt());
+        //setFixedSize(800, 480);
     }
 }
 
@@ -63,7 +65,7 @@ void Layout::SetTextsOnLayout(QString message)
 {
     EditQObjectAtribute("message", "text", message);
     EditQObjectAtribute("DNSname", "text", QHostInfo::localHostName());
-    if (AppConfig->isEmulator)
+    if (!AppConfig->isEmulator.isNull())
     {
         EditQObjectAtribute("PortNumber", "text", QString::number(AppConfig->portNumber));
     }
